@@ -6,6 +6,7 @@ use MikrotikAPI\Talker\Talker;
 use \MikrotikAPI\Entity\Auth;
 use MikrotikAPI\Commands\IP\Address;
 use MikrotikAPI\Commands\IP\Firewall\FirewallFilter;
+use \MikrotikAPI\Commands\System\SystemScheduler;
 
 
 $auth = new Auth();
@@ -22,6 +23,9 @@ $talker = new Talker($auth);
 
 $ipaddr = new Address($talker);
 $listIP = $ipaddr->getAll();
+\print_r($listIP);
 
+//$scripts = new SystemScheduler($talker);
+//\print_r($scripts->getAll());
 
-MikrotikAPI\Util\DebugDumper::dump($listIP);
+//MikrotikAPI\Util\DebugDumper::dump($listIP);

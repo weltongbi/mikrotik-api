@@ -26,11 +26,15 @@ class Address {
     }
 
     /**
-     * This method is used to add the ip address
-     * @param type $address string
-     * @param type $interface string
-     * @param type $comment string
-     * @return type array
+     * 
+     * @param array $param ex:
+     *      ['address' => '0.0.0.2'
+     *      'interface' => 'eth0'
+     *      'network' => '0.0.0.1'
+     *      'disabled' => false  
+     *      'comment'  => ''
+     *      ]
+     * @return string
      */
     public function add($param) {
         $sentence = new SentenceUtil();
@@ -44,7 +48,7 @@ class Address {
 
     /**
      * This method is used to display all ip address
-     * @return type array
+     * @return array
      * 
      */
     public function getAll() {
@@ -62,8 +66,8 @@ class Address {
 
     /**
      * This method is used to activate the ip address by id
-     * @param type $id is not an array
-     * @return type array
+     * @param string $id is not an array
+     * @return array
      * 
      * 
      */
@@ -77,8 +81,8 @@ class Address {
 
     /**
      * This method is used to disable ip address by id
-     * @param type $id string 
-     * @return type array
+     * @param string $id 
+     * @return array
      * 
      * 
      */

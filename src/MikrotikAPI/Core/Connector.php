@@ -68,10 +68,9 @@ class Connector {
         if (socket_connect($this->socket, $this->host, $this->port)) {
             $this->sendStream("/login");
             $rec = $this->recieveStream();
-            if (!Util::contains($rec, "!trap") && strlen($rec) > 0) {
-                $word = explode("\n", $rec);
-                if (count($word) > 1) {
-                    $split = explode("=ret=", $word[2]);
+            if (!Util::contains($rec, "!trap") && count($rec) > 0) {
+                if (count($rec) > 1) {
+                    $split = explode("=ret=", $rec[1]);
                     $challange = $split[1];
                     $challanger = $this->challanger($this->username, $this->password, $challange);
                     $this->sendStream($challanger);

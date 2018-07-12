@@ -77,12 +77,12 @@ class StreamReciever {
     }
 
     public function reciever() {
-        $out = "";
+        $out = [];
         $i = 0;
         while (true) {
             $word = $this->protocolWordDecoder();
             if (strlen($word) != 0 && strlen($word) > 0) {
-                $out = $out . "\n" . $word;
+                $out[] = $word;
             } else {
                 break;
             }

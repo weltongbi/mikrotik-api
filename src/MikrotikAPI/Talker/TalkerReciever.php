@@ -51,28 +51,28 @@ class TalkerReciever {
     }
 
     private function parseRawToList($raw) {
-        $raw = trim($raw);
+
         if (!empty($raw)) {
             $list = new \ArrayObject();
-            $token = explode("\n", $raw);
-            $a = 1;
-            while ($a < count($token)) {
-                next($token);
+            foreach ($raw as $value) {
                 $attr = new Attribute();
-                if (!(current($token) == "!re") && !(current($token) == "!trap")) {
-                    $split = explode("=", current($token));
-                    $attr->setName($split[1]);
-                    if (count($split) == 3) {
-                        $attr->setValue($split[2]);
-                    } else {
-                        $attr->setValue(NULL);
-                    }
-                    $list->append($attr);
+                
+                if(in_array($value, array('!fatal', '!re', '!trap'))){
+                    continue;
                 }
-                $a++;
+                
+                if (\preg_match('/^=([^=]+)=(.*)$/sS', $value, $MATCHES)) {
+                    if ($MATCHES[1]) {
+                        $attr->setName($MATCHES[1]);
+                        $attr->setValue(isset($MATCHES[2]) ? $MATCHES[2] : \NULL);
+                    }
+                }
+                $list->append($attr);
             }
-            if ($list->count() != 0)
+            
+            if ($list->count() != 0) {
                 $this->result->add($list);
+            }
         }
     }
 
