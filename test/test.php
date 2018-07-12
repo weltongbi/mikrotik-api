@@ -9,9 +9,9 @@ use MikrotikAPI\Commands\IP\Firewall\FirewallFilter;
 
 
 $auth = new Auth();
-$auth->setHost("172.18.1.254");
+$auth->setHost("192.168.100.25");
 $auth->setUsername("admin");
-$auth->setPassword("1261");
+$auth->setPassword("");
 $auth->setDebug(true);
 
 

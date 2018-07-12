@@ -1,9 +1,8 @@
 {
-    "name": "nunenuh/mikrotik-api",
-    "description": "Mikrotik API PHP Library for working with RouterOS API",
-    "version": "0.8.0",
+    "name": "weltongbi/mikrotik-api",
+    "description": "Mikrotik API PHP Library for working with RouterOS API 2018",
     "type": "library",
-    "time": "2013-12-03",
+    "time": "2018-07-12",
     "keywords": ["API", "Mikrotik","RouterOS"],
     "license": "MIT",
     "authors": [
@@ -11,6 +10,11 @@
             "name": "Lalu Erfandi Maula Yusnu",
             "email": "nunenuh@gmail.com",
             "homepage": "http://nunenuh.web.id"
+        },
+        {
+            "name": "Welton Castro",
+            "email": "weltongbi@gmail.com",
+            "homepage": "http://intranet.br.com"
         }
     ],
     "autoload": {
