@@ -3,7 +3,7 @@
     "description": "Mikrotik API PHP Library for working with RouterOS API 2018",
     "type": "library",
     "time": "2018-07-12",
-    "keywords": ["API", "Mikrotik","RouterOS"],
+    "keywords": ["API", "Mikrotik", "RouterOS"],
     "license": "MIT",
     "authors": [
         {
@@ -19,7 +19,11 @@
     ],
     "autoload": {
         "psr-0": {
-            "MikrotikAPI": "src/",
+            "MikrotikAPI": "src/"            
+        }
+    },
+    "autoload-dev": {
+        "psr-0": {
             "MikrotikAPITest": "test/"
         }
     },
