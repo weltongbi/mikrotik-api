@@ -4,3 +4,9 @@
 
 
 Manual: 
+
+Install via composer
+
+```sh
+$composer require weltongbi/mikrotik-api
+```
