@@ -15,6 +15,9 @@ use MikrotikAPI\Core\StreamReciever,
  * @category Libraries
  * @property StreamSender $sender
  * @property StreamReciever $reciever
+ * 
+ * Editado por:
+ * @author Welton castro <weltongbi@gmail.com>
  */
 class Connector {
 
@@ -66,7 +69,29 @@ class Connector {
 
     public function connect() {
         if (socket_connect($this->socket, $this->host, $this->port)) {
-            $this->sendStream("/login");
+            $this->sender->send("/login");
+            $rec = $this->recieveStream();
+            if (!Util::contains($rec, "!trap") && count($rec) > 0) {
+                if (count($rec) > 1) {
+                    $split = explode("=ret=", $rec[1]);
+                    $challange = $split[1];
+                    $challanger = $this->challanger($this->username, $this->password, $challange);
+                    $this->sendStream($challanger);
+                    $res = $this->recieveStream();
+                    if (Util::contains($res, "!done") && !Util::contains($res, "!trap")) {
+                        $this->login = TRUE;
+                    }
+                }
+            }
+            $this->connected = TRUE;
+        } else {
+            $this->connected = FALSE;
+        }
+    }
+
+    public function connect_v6() {
+        if (socket_connect($this->socket, $this->host, $this->port)) {
+            $this->sender->send("/login");
             $rec = $this->recieveStream();
             if (!Util::contains($rec, "!trap") && count($rec) > 0) {
                 if (count($rec) > 1) {

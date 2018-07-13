@@ -71,7 +71,7 @@ class TalkerSender {
     }
 
     private function createSentence(SentenceUtil $sentence) {
-        $build = "";
+        $build = [];
         $sentence = $this->sentenceWrapper($sentence);
         $it = $sentence->getIterator();
         $cmd = "";
@@ -82,36 +82,35 @@ class TalkerSender {
             $value = $it->current()->getValue();
 
             if (Util::contains($clause, "commandPrint")) {
-                $build = $build . $value;
+                $build[] = $value;
                 $cmd = "print";
             } else if (Util::contains($clause, "commandReguler")) {
-                $build = $build . $value;
+                $build[] = $value;
                 $cmd = "reguler";
             } else {
                 if (Util::contains($name, "proplist") || Util::contains($name, "tag")) {
-                    $build = $build . "=." . $name . "=" . $value;
+                    $build[] =  "=." . $name . "=" . $value;
                 }
 
                 if ($clause == "where" && $cmd == "print") {
-                    $build = $build . "?" . $name . $value;
+                    $build[] = "?" . $name . $value;
                 }
 
                 if ($clause == "where" && $cmd == "reguler") {
-                    $build = $build . $name . $value;
+                    $build[] = $name . $value;
                 }
 
                 if ($clause == "whereNot" || $clause == "orWhere" ||
                         $clause == "orWhereNot" || $clause == "andWhere" ||
                         $clause == "andWhereNot") {
-                    $build = $build . $name . $value;
+                    $build[] = $name . $value;
                 }
 
                 if ($clause == "setAttribute") {
-                    $build = $build . "=" . $name . "=" . $value;
+                    $build[] = "=" . $name . "=" . $value;
+                    //\print_r($build);
                 }
             }
-            if ($it->valid())
-                $build = $build . "\n";
             $it->next();
         }
         $this->runDebugger($build);

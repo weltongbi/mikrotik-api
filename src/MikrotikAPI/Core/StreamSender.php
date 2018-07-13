@@ -72,19 +72,16 @@ class StreamSender {
     }
 
     public function send($command) {
-        $com_array = explode("\n", $command);
+        $com_array = is_array($command) ? $command : explode("\n", $command);
+
         if (count($com_array) > 2) {
-            $ret = NULL;
             foreach ($com_array as $data) {
-                $com = $data;
-                $ret = $this->protocolWordEncoder($com);
+                $this->protocolWordEncoder($data);
             }
-            $ret = $this->protocolWordEncoder('');
-            return $ret;
+            $this->protocolWordEncoder('');
         } else {
-            $com = $com_array[0];
-            $ret = $this->protocolWordEncoder($com);
-            $ret = $this->protocolWordEncoder('');
+            $this->protocolWordEncoder($com_array[0]);
+            $this->protocolWordEncoder('');
         }
     }
 

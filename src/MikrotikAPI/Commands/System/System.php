@@ -26,9 +26,9 @@ class System {
     }
 
     /**
-     * This method is used to set systemn identity
-     * @param type $name string
-     * @return type array
+     * This method is used to set system identity
+     * @param string $name 
+     * @return string
      */
     public function set_identity($name) {
         $sentence = new SentenceUtil();
@@ -40,7 +40,7 @@ class System {
 
     /**
      * This method is used to display all system  identiy
-     * @return type array
+     * @return array
      */
     public function get_all_identity() {
         $sentence = new SentenceUtil();
@@ -52,7 +52,7 @@ class System {
 
     /**
      * This method is used to display all system clock
-     * @return type array
+     * @return array
      */
     public function get_all_clock() {
         $sentence = new SentenceUtil();
@@ -67,8 +67,8 @@ class System {
 
     /**
      * This method is used to system bacup save
-     * @param type $name string
-     * @return type array
+     * @param string $name 
+     * @return string
      */
     public function save_backup($name) {
         $sentence = new SentenceUtil();
@@ -80,8 +80,8 @@ class System {
 
     /**
      * This method is used to system backup load
-     * @param type $name string
-     * @return type array
+     * @param string $name backup name
+     * @return string
      */
     public function load_backup($name) {
         $sentence = new SentenceUtil();
@@ -93,7 +93,7 @@ class System {
 
     /**
      * This method is used to display all system history
-     * @return type array
+     * @return array|string
      */
     public function get_all_history() {
         $sentence = new SentenceUtil();
@@ -110,7 +110,7 @@ class System {
 
     /**
      * This method is used to display all system license
-     * @return type array
+     * @return array
      */
     public function get_all_license() {
         $sentence = new SentenceUtil();
@@ -125,7 +125,7 @@ class System {
 
     /**
      * This method is used to display all system routerboard
-     * @return type array
+     * @return array
      */
     public function get_all_routerboard() {
         $sentence = new SentenceUtil();
@@ -139,11 +139,12 @@ class System {
     }
 
     /**
-     * This method is used to system reset configuration
-     * @param type $keep_users string (yes or no)
-     * @param type $no_defaults string (yes or no)
-     * @param type $skip_backup string (yes or no)
-     * @return type array
+     * En: This method is used to system reset configuration
+     * Br: Método usado para resetar as configurações
+     * @param string $keep_users  (yes or no)
+     * @param string $no_defaults (yes or no)
+     * @param string $skip_backup (yes or no)
+     * @return string
      */
     public function reset($keep_users, $no_defaults, $skip_backup) {
         $sentence = new SentenceUtil();
@@ -151,6 +152,21 @@ class System {
         $sentence->setAttribute("keep-users", $keep_users);
         $sentence->setAttribute("no-defaults", $no_defaults);
         $sentence->setAttribute("skip-backup", $skip_backup);
+        $this->talker->send($sentence);
+        return "Sucsess";
+    }
+    /**
+     * En: This method is used to set system note
+     * Br: Método usado para setar a nota do sistema
+     * @param string $text 
+     * @param string $show_at_login (yes or no)
+     * @return string
+     */
+    public function set_note($text, $show_at_login = "yes") {
+        $sentence = new SentenceUtil();
+        $sentence->addCommand("/system/note/set");
+        $sentence->setAttribute("show-at-login", $show_at_login);
+        $sentence->setAttribute("note", $text);
         $this->talker->send($sentence);
         return "Sucsess";
     }
