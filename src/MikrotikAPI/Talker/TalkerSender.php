@@ -2,7 +2,8 @@
 
 namespace MikrotikAPI\Talker;
 
-use MikrotikAPI\Core\Connector,
+use MikrotikAPI\Core\Socket,
+    MikrotikAPI\Core\StreamSender,
     MikrotikAPI\Util\SentenceUtil,
     MikrotikAPI\Entity\Attribute,
     MikrotikAPI\Util\Util,
@@ -19,15 +20,18 @@ use MikrotikAPI\Core\Connector,
 class TalkerSender {
 
     private $debug = FALSE;
-    private $con;
+    private $streamSender;
 
-    public function __construct(Connector $con) {
-        $this->con = $con;
+    public function __construct(Socket $socket) {
+        $this->streamSender = new StreamSender($socket->getSocket());
     }
-
+    /**
+     * 
+     * @param SentenceUtil $sentence estancia da classe SentenceUtil 
+     */
     public function send(SentenceUtil $sentence) {
         $cmd = $this->createSentence($sentence);
-        $this->con->sendStream($cmd);
+        $this->streamSender->send($cmd);
     }
 
     public function isDebug() {

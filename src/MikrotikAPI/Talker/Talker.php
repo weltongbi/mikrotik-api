@@ -2,8 +2,8 @@
 
 namespace MikrotikAPI\Talker;
 
-use MikrotikAPI\Entity\Auth;
-use MikrotikAPI\Core\Connector;
+use MikrotikAPI\Core\Connector,
+    MikrotikAPI\Util\SentenceUtil;
 
 /**
  * Description of Talker
@@ -12,27 +12,39 @@ use MikrotikAPI\Core\Connector;
  * @copyright Copyright (c) 2011, Virtual Think Team.
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @category Libraries
- * @property TalkerReciever
- * @property TalkerSender
+ * @property SentenceUtil $build
+ * @property Connector $con
  */
 class Talker {
 
-    private $sender;
-    private $reciever;
-    private $auth;
+    /**
+     * @name Auth
+     */
+    use \MikrotikAPI\Entity\Auth;
+
+    private $talkerSender;
+    private $talkerReciever;
     private $connector;
+    private $con;
+    public $build;
 
 //        private $param;
 
 
-    public function __construct(Auth $auth) {
-//        parent::__construct($auth->getHost(), $auth->getPort(), $auth->getUsername(), $auth->getPassword());
-//        parent::connect();
-        $this->auth = $auth;
-        $this->connector = new Connector($auth->getHost(), $auth->getPort(), $auth->getUsername(), $auth->getPassword());
-        $this->connector->connect();
-        $this->sender = new TalkerSender($this->connector);
-        $this->reciever = new TalkerReciever($this->connector);
+    public function __construct() {
+        $this->build = new SentenceUtil();
+    }
+
+    public function initialize() {
+        if ($this->getHost() && $this->getUsername()) {
+            $this->connector = new Connector($this->getHost(), $this->getPort(), $this->getUsername(), $this->getPassword());
+            if (\version_compare("6.43", $this->getVersion(), ">=")) {
+                //conector para versao 6 acima.
+                $this->con = $this->connector->connect_v6();
+            } else {
+                $this->connector->connect();
+            }
+        }
     }
 
     /**
@@ -40,6 +52,7 @@ class Talker {
      * @return type
      */
     public function isLogin() {
+
 //        return parent::isLogin();
     }
 
@@ -57,16 +70,6 @@ class Talker {
      */
     public function isDebug() {
         return $this->auth->getDebug();
-    }
-
-    /**
-     * 
-     * @param type $boolean
-     */
-    public function setDebug($boolean) {
-        $this->auth->setDebug($boolean);
-        $this->sender->setDebug($boolean);
-        $this->reciever->setDebug($boolean);
     }
 
     /**
@@ -97,9 +100,11 @@ class Talker {
      * 
      * @param type $sentence
      */
-    public function send($sentence) {
-        $this->sender->send($sentence);
-        $this->reciever->doRecieving();
+    public function send($sentence = null) {
+        $sentence = $sentence ? $sentence : $this->build->getInstance();
+
+        $this->con->talkerSender->send($sentence);
+        $this->con->talkerReciever->doRecieving();
     }
 
     /**
@@ -107,7 +112,7 @@ class Talker {
      * @return type
      */
     public function getResult() {
-        return $this->reciever->getResult();
+        return $this->con->talkerReciever->getResult();
     }
 
 }

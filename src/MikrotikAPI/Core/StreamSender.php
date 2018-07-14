@@ -70,7 +70,10 @@ class StreamSender {
         $this->protocolLengthEncoder($command);
         $this->streamSender($command);
     }
-
+    /**
+     * Sent command
+     * @param array|string $command command type array or string
+     */
     public function send($command) {
         $com_array = is_array($command) ? $command : explode("\n", $command);
 

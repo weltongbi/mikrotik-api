@@ -7,7 +7,7 @@ namespace MikrotikAPI\Entity;
  *
  * @author nunenuh
  */
-class Auth {
+trait Auth {
 
     /**
      *
@@ -16,7 +16,7 @@ class Auth {
     private $host;
 
     /**
-     *
+     * Default 8728
      * @var int 
      */
     private $port = 8728;
@@ -28,48 +28,66 @@ class Auth {
     private $username;
 
     /**
-     *
+     * Default blank
      * @var string 
      */
-    private $password;
+    private $password = "";
 
     /**
-     *
-     * @var boolean 
-     */
-    private $debug = FALSE;
-
-    /**
-     *
+     * Default 5
      * @var int
      */
     private $attempts = 5;
 
     /**
-     *
+     * Default 2
      * @var int
      */
     private $delay = 2;
 
     /**
-     *
+     * Default 2
      * @var int
      */
     private $timeout = 2;
+    /**
+     * 
+     * @var string 
+     */
+    private $version = "6.43";
 
-    function __construct() {
-        
-    }
-
-    public function set($host, $port, $username, $password, $debug, $attempts, $delay, $timeout) {
+    /**
+     * 
+     * @param string $host ip ou dominio do mikrotik
+     * @param int $port porta da api
+     * @param string $username usuário
+     * @param string $password senha
+     * @param int $attempts
+     * @param int $delay
+     * @param int $timeout
+     * @param string $version versão do mikrotik
+     */
+    public function set($host, $port, $username, $password, $attempts, $delay, $timeout, $version) {
         $this->host = $host;
         $this->port = $port;
         $this->username = $username;
         $this->password = $password;
-        $this->debug = $debug;
         $this->attempts = $attempts;
         $this->delay = $delay;
         $this->timeout = $timeout;
+        $this->version = $version;
+    }
+
+    /**
+     * Seta as configurações principais assumindo o restante como default;
+     * @param string $host ip ou domínio do mikrotik
+     * @param string $username usuário
+     * @param string $password senha
+     */
+    public function setSimple($host, $username, $password) {
+        $this->host = $host;
+        $this->username = $username;
+        $this->password = $password;
     }
 
     public function getHost() {
@@ -88,10 +106,6 @@ class Auth {
         return $this->password;
     }
 
-    public function getDebug() {
-        return $this->debug;
-    }
-
     public function getAttempts() {
         return $this->attempts;
     }
@@ -104,36 +118,72 @@ class Auth {
         return $this->timeout;
     }
 
+    public function getVersion() {
+        return $this->version;
+    }
+
+    /**
+     * 
+     * @param string $host
+     */
     public function setHost($host) {
         $this->host = $host;
     }
 
+    /**
+     * 
+     * @param int $port
+     */
     public function setPort($port) {
         $this->port = $port;
     }
 
+    /**
+     * 
+     * @param string $username
+     */
     public function setUsername($username) {
         $this->username = $username;
     }
 
+    /**
+     * 
+     * @param string $password
+     */
     public function setPassword($password) {
         $this->password = $password;
     }
 
-    public function setDebug($debug) {
-        $this->debug = $debug;
-    }
-
+    /**
+     * 
+     * @param int $attempts
+     */
     public function setAttempts($attempts) {
         $this->attempts = $attempts;
     }
 
+    /**
+     * 
+     * @param int $delay
+     */
     public function setDelay($delay) {
         $this->delay = $delay;
     }
 
+    /**
+     * 
+     * @param int $timeout
+     */
     public function setTimeout($timeout) {
         $this->timeout = $timeout;
     }
 
+    /**
+     * Default: 6.43 - novo método de login
+     * Para versões mais antigas usar um numero abaixo, ex: 6.42
+     * @param string $version versão do sistema mikrotik
+     */
+    public function setVersion($version) {
+        $this->version = $version;
+    }
 }

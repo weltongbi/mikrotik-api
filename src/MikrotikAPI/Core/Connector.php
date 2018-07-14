@@ -2,8 +2,10 @@
 
 namespace MikrotikAPI\Core;
 
-use MikrotikAPI\Core\StreamReciever,
-    MikrotikAPI\Core\StreamSender,
+use MikrotikAPI\Talker\TalkerReciever,
+    MikrotikAPI\Talker\TalkerSender,
+    MikrotikAPI\Core\Socket,
+    MikrotikAPI\Util\SentenceUtil,
     MikrotikAPI\Util\Util;
 
 /**
@@ -13,23 +15,27 @@ use MikrotikAPI\Core\StreamReciever,
  * @copyright Copyright (c) 2011, Virtual Think Team.
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @category Libraries
- * @property StreamSender $sender
- * @property StreamReciever $reciever
+ * @property TalkerSender $talkerSender
+ * @property TalkerReciever $talkerReciever
  * 
  * Editado por:
  * @author Welton castro <weltongbi@gmail.com>
  */
 class Connector {
 
+    /**
+     *
+     * @var Socket
+     */
     private $socket;
-    private $sender;
-    private $reciever;
+    public $talkerSender;
+    public $talkerReciever;
     private $host;
     private $port;
     private $username;
     private $password;
-    private $connected = FALSE;
     private $login = FALSE;
+    public $result;
 
     public function __construct($host, $port, $username, $password) {
         $this->host = $host;
@@ -48,34 +54,26 @@ class Connector {
     }
 
     private function initStream() {
-        $this->socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-        $this->sender = new StreamSender($this->socket);
-        $this->reciever = new StreamReciever($this->socket);
+        $this->socket = new Socket($this->host, $this->port);
+        $this->talkerSender = new TalkerSender($this->socket);
+        $this->talkerReciever = new TalkerReciever($this->socket);
     }
 
-    public function sendStream($command) {
-        return $this->sender->send($command);
-    }
-
-    public function recieveStream() {
-        return $this->reciever->reciever();
-    }
-
-    private function challanger($username, $password, $challange) {
+    private function challanger($challange) {
         $chal = md5(chr(0) . $this->password . pack('H*', $challange));
         $login = "/login\n=name=" . $this->username . "\n=response=00" . $chal;
         return $login;
     }
 
     public function connect() {
-        if (socket_connect($this->socket, $this->host, $this->port)) {
+        if (true) {
             $this->sender->send("/login");
             $rec = $this->recieveStream();
             if (!Util::contains($rec, "!trap") && count($rec) > 0) {
                 if (count($rec) > 1) {
                     $split = explode("=ret=", $rec[1]);
                     $challange = $split[1];
-                    $challanger = $this->challanger($this->username, $this->password, $challange);
+                    $challanger = $this->challanger($challange);
                     $this->sendStream($challanger);
                     $res = $this->recieveStream();
                     if (Util::contains($res, "!done") && !Util::contains($res, "!trap")) {
@@ -89,26 +87,26 @@ class Connector {
         }
     }
 
+    /**
+     * 
+     * @return $this
+     */
     public function connect_v6() {
-        if (socket_connect($this->socket, $this->host, $this->port)) {
-            $this->sender->send("/login");
-            $rec = $this->recieveStream();
-            if (!Util::contains($rec, "!trap") && count($rec) > 0) {
-                if (count($rec) > 1) {
-                    $split = explode("=ret=", $rec[1]);
-                    $challange = $split[1];
-                    $challanger = $this->challanger($this->username, $this->password, $challange);
-                    $this->sendStream($challanger);
-                    $res = $this->recieveStream();
-                    if (Util::contains($res, "!done") && !Util::contains($res, "!trap")) {
-                        $this->login = TRUE;
-                    }
-                }
+        if ($this->socket->getConnected()) {
+            $cmd = new SentenceUtil();
+            $cmd->addCommand('/login');
+            $cmd->setAttribute('name', $this->username);
+            $cmd->setAttribute('password', $this->password);
+            $this->talkerSender->send($cmd);
+
+            $this->result = $this->talkerReciever->doRecieving();
+            if ($this->result->isDone()) {
+                $this->login = TRUE;
+            } else {
+                $this->login = FALSE;
             }
-            $this->connected = TRUE;
-        } else {
-            $this->connected = FALSE;
         }
+        return $this;
     }
 
 }

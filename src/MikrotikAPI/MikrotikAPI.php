@@ -1,7 +1,7 @@
 <?php
 
 namespace MikrotikAPI;
-
+use MikrotikAPI\Talker\Talker;
 /**
  * Description of Mikrotik_Api
  * @author Lalu Erfandi Maula Yusnu nunenuh@gmail.com <http://vthink.web.id>
@@ -12,35 +12,22 @@ namespace MikrotikAPI;
 class MikrotikAPI {
 
     /**
-     * @access private
-     * @var type Object
-     */
-    private $CI;
-
-    /**
      * Instantiation of Class Mikrotik_Api
      * @access private
      * @var type array
      */
     private $param;
-    
-    
+
     /**
      *
-     * @var Talker\Talker
+     * @var Talker
      */
-    private $talker;
+    public $talker;
 
     function __construct($param = array()) {
-        $this->CI = & get_instance();
-        $param_config = $this->CI->config->item('mikrotik');
-        if (isset($param_config) && is_array($param_config)) {
-            $this->param = $param_config;
-        } else {
-            $this->param = $param;
-        }
-        $this->talker = new Talker($this->param['host'], $this->param['port'], $this->param['username'], $this->param['password']);
+        $this->talker = new Talker;
     }
+    
 
     /**
      * This method for call class Mapi IP

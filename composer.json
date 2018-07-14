@@ -19,12 +19,12 @@
     ],
     "autoload": {
         "psr-0": {
-            "MikrotikAPI": "src/"            
+            "MikrotikAPI\\": "src/"            
         }
     },
     "autoload-dev": {
-        "psr-0": {
-            "MikrotikAPITest": "test/"
+        "psr-4": {
+            "MikrotikAPITest\\": "test/"
         }
     },
     "require": {

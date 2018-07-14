@@ -2,7 +2,8 @@
 
 namespace MikrotikAPI\Talker;
 
-use MikrotikAPI\Core\Connector,
+use MikrotikAPI\Core\Socket,
+    MikrotikAPI\Core\StreamReciever,
     MikrotikAPI\Util\ResultUtil,
     MikrotikAPI\Util\Util,
     MikrotikAPI\Entity\Attribute,
@@ -18,15 +19,15 @@ use MikrotikAPI\Core\Connector,
  */
 class TalkerReciever {
 
-    private $con;
+    private $streamReciever;
     private $result;
     private $trap = FALSE;
     private $done = FALSE;
     private $re = FALSE;
     private $debug = FALSE;
 
-    public function __construct(Connector $con) {
-        $this->con = $con;
+    public function __construct(Socket $socket) {
+        $this->streamReciever = new StreamReciever($socket->getSocket());
         $this->result = new ResultUtil();
     }
 
@@ -82,6 +83,7 @@ class TalkerReciever {
 
     public function doRecieving() {
         $this->run();
+        return $this;
     }
 
     private function runDebugger($string) {
@@ -93,7 +95,7 @@ class TalkerReciever {
     private function run() {
         $s = "";
         while (true) {
-            $s = $this->con->recieveStream();
+            $s = $this->streamReciever->reciever();
             if (Util::contains($s, "!re")) {
                 $this->parseRawToList($s);
                 $this->runDebugger($s);
@@ -111,7 +113,7 @@ class TalkerReciever {
                 $this->done = TRUE;
                 break;
             }
-        }
+        }        
     }
 
 }

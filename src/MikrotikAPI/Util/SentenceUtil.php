@@ -16,6 +16,9 @@ class SentenceUtil {
 
     private $list;
 
+    /**
+     * Sentença de comandos
+     */
     public function __construct() {
         $this->list = new \ArrayObject();
     }
@@ -117,6 +120,10 @@ class SentenceUtil {
 
     public function getBuildCommand() {
         return $this->list;
+    }
+
+    public function getInstance() {
+        return $this;
     }
 
     public function add(Attribute $attr) {
