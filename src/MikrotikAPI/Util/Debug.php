@@ -18,13 +18,13 @@ class Debug {
      * 
      * @param mixed $cmd
      */
-    public function cmd($cmd) {
+    public static function cmd($cmd) {
         if (defined('MK_DEBUG') && constant('MK_DEBUG') == true && !empty($cmd)) {
             \print_r($cmd . PHP_EOL);
         }
     }
 
-    public function error($text) {
+    public static function error($text) {
         \print_r($text . PHP_EOL);
     }
 
