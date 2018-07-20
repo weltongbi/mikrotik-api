@@ -20,18 +20,18 @@ use MikrotikAPI\Core\Socket,
 class TalkerSender {
 
     private $debug = FALSE;
-    private $streamSender;
-
+    private $socket;
     public function __construct(Socket $socket) {
-        $this->streamSender = new StreamSender($socket->getSocket());
+        $this->socket = $socket;
     }
     /**
      * 
      * @param SentenceUtil $sentence estancia da classe SentenceUtil 
      */
-    public function send(SentenceUtil $sentence) {
+    public function send(SentenceUtil $sentence) {        
         $cmd = $this->createSentence($sentence);
-        $this->streamSender->send($cmd);
+        $streamSender = new StreamSender($this->socket);
+        $streamSender->send($cmd);
     }
 
     public function isDebug() {
@@ -112,7 +112,6 @@ class TalkerSender {
 
                 if ($clause == "setAttribute") {
                     $build[] = "=" . $name . "=" . $value;
-                    //\print_r($build);
                 }
             }
             $it->next();

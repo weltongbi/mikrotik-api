@@ -121,7 +121,10 @@ class SentenceUtil {
     public function getBuildCommand() {
         return $this->list;
     }
-
+    /**
+     * 
+     * @return $this
+     */
     public function getInstance() {
         return $this;
     }

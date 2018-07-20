@@ -2,6 +2,9 @@
 
 namespace MikrotikAPI\Core;
 
+use MikrotikAPI\Core\Socket,
+    MikrotikAPI\Util\Debug;
+
 /**
  * Description of StreamSender
  *
@@ -14,7 +17,7 @@ class StreamSender {
 
     private $socket;
 
-    function __construct($socket) {
+    function __construct(Socket $socket) {
         $this->socket = $socket;
     }
 
@@ -56,10 +59,10 @@ class StreamSender {
         $i = 0;
         $out = 0;
         while ($i < strlen($command)) {
-            $out = socket_write($this->socket, $command);
+            $out = socket_write($this->socket->getSocket(), $command);
             if ($out == 0) {
                 echo "Connection closed";
-                echo socket_last_error($this->socket);
+                echo socket_last_error($this->socket->getSocket());
                 break;
             }
             $i += $out;
@@ -70,20 +73,23 @@ class StreamSender {
         $this->protocolLengthEncoder($command);
         $this->streamSender($command);
     }
+
     /**
-     * Sent command
+     * Send command
      * @param array|string $command command type array or string
      */
     public function send($command) {
         $com_array = is_array($command) ? $command : explode("\n", $command);
 
-        if (count($com_array) > 2) {
+        if (count($com_array) >= 2) {
             foreach ($com_array as $data) {
+                Debug::cmd("OUT: ".$data);
                 $this->protocolWordEncoder($data);
             }
             $this->protocolWordEncoder('');
         } else {
             $this->protocolWordEncoder($com_array[0]);
+            Debug::cmd("OUT: ".$com_array[0]);
             $this->protocolWordEncoder('');
         }
     }

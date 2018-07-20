@@ -2,6 +2,8 @@
 
 namespace MikrotikAPI\Core;
 
+use MikrotikAPI\Util\Debug;
+
 /**
  * Description of StreamReciever
  *
@@ -82,6 +84,7 @@ class StreamReciever {
         while (true) {
             $word = $this->protocolWordDecoder();
             if (strlen($word) != 0 && strlen($word) > 0) {
+                Debug::cmd("IN: ".$word);
                 $out[] = $word;
             } else {
                 break;
@@ -89,10 +92,6 @@ class StreamReciever {
             $i++;
         }
         return $out;
-    }
-
-    private function getSocketStatus() {
-        return socket_get_status($this->socket);
     }
 
 }

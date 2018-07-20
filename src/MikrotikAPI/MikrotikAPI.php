@@ -1,93 +1,61 @@
 <?php
 
 namespace MikrotikAPI;
-use MikrotikAPI\Talker\Talker;
+
+use MikrotikAPI\Talker\Talker,
+    MikrotikAPI\Commands\File\File,
+    MikrotikAPI\Commands\IP\IP,
+    MikrotikAPI\Commands\Interfaces\Interfaces,
+    MikrotikAPI\Commands\PPP\PPP,
+    MikrotikAPI\Commands\System\System;
+
 /**
  * Description of Mikrotik_Api
  * @author Lalu Erfandi Maula Yusnu nunenuh@gmail.com <http://vthink.web.id>
  * @copyright Copyright (c) 2011, Virtual Think Team.
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @category Libraries
+ * @property File $file /file
+ * @property IP $ip /ip
+ * @property Interfaces $interfaces /interfaces
+ * @property PPP $ppp /ppp
+ * @property System $system /system
  */
-class MikrotikAPI {
+class MikrotikAPI extends Talker {
 
-    /**
-     * Instantiation of Class Mikrotik_Api
-     * @access private
-     * @var type array
-     */
-    private $param;
+    const MK_DEFAULT_RESULT = 'array';
 
-    /**
-     *
-     * @var Talker
-     */
-    public $talker;
+    private $class = [
+        'file' => 'MikrotikAPI\Commands\File\File',
+        'ip' => 'MikrotikAPI\Commands\IP\IP',
+        'interfaces' => 'MikrotikAPI\Commands\Interfaces\Interfaces',
+        'ppp' => 'MikrotikAPI\Commands\PPP\PPP',
+        'system' => 'MikrotikAPI\Commands\System\System',
+    ];
 
-    function __construct($param = array()) {
-        $this->talker = new Talker;
-    }
-    
-
-    /**
-     * This method for call class Mapi IP
-     * @access public
-     * @return Object of Mapi_Ip 
-     */
-    public function IP() {
-        return new Mapi_Ip($this->talker);
+    function __construct() {
+        parent::__construct();
     }
 
-    /**
-     * This method for call class Mapi Interface
-     * @access public
-     * @return Object of Mapi_Interface 
-     */
-    public function interfaces() {
-        return new Mapi_Interfaces($this->talker);
+    public function __get($name) {
+        if ($this->class[$name]) {
+            $class = $this->class[$name];
+            return new $class($this->get_instance());
+        }
+        throw new Exception('The method not exist');
     }
 
-    /**
-     * This method for call class Mapi Ppp
-     * @access public
-     * @return Object of Mapi_Ppp
-     */
-    public function ppp() {
-        return new Mapi_Ppp($this->talker);
+    public function setDebug($v) {
+        if (!defined('MK_DEBUG')) {
+            define('MK_DEBUG', $v);
+            echo ':::::::::::-MikrotikAPI Debug-:::::::::::' . PHP_EOL;
+        }
     }
 
-    /**
-     * This method for call class Mapi_System
-     * @access public
-     * @return Mapi_System 
-     */
-    public function system() {
-        return new Mapi_System($this->talker);
-    }
-
-    /**
-     * This method for call class Mapi_File
-     * @access public
-     * @return Mapi_File 
-     */
-    public function file() {
-        return new Mapi_File($this->talker);
-    }
-
-    /**
-     * This metod used call class Mapi_System_Scheduler 
-     * @return Mapi_Ip
-     */
-    public function system_scheduler() {
-        return new Mapi_System_Scheduler($this->talker);
-    }
-
-    /**
-     * 
-     * @return \Talker
-     */
-    public function buildCommand() {
-        return new Talker($this->param['host'], $this->param['port'], $this->param['username'], $this->param['password']);
+    public function setResultType($type) {
+        if (!defined('MK_RESULT_TYPE')) {
+            define('MK_RESULT_TYPE', $type);
+        }
     }
 
 }

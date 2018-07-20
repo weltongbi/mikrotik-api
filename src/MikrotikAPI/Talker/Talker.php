@@ -3,7 +3,8 @@
 namespace MikrotikAPI\Talker;
 
 use MikrotikAPI\Core\Connector,
-    MikrotikAPI\Util\SentenceUtil;
+    MikrotikAPI\Util\SentenceUtil,
+    MikrotikAPI\Util\ResultUtil;
 
 /**
  * Description of Talker
@@ -17,43 +18,52 @@ use MikrotikAPI\Core\Connector,
  */
 class Talker {
 
-    /**
-     * @name Auth
-     */
     use \MikrotikAPI\Entity\Auth;
 
     private $talkerSender;
     private $talkerReciever;
-    private $connector;
     private $con;
     public $build;
+    private $socket;
 
-//        private $param;
-
+    /**
+     * Istance the Talker;
+     */
+    private static $instance;
 
     public function __construct() {
+        self::$instance = & $this;
+
+        $this->build();
+    }
+
+    private function build() {
         $this->build = new SentenceUtil();
     }
 
     public function initialize() {
         if ($this->getHost() && $this->getUsername()) {
-            $this->connector = new Connector($this->getHost(), $this->getPort(), $this->getUsername(), $this->getPassword());
-            if (\version_compare("6.43", $this->getVersion(), ">=")) {
-                //conector para versao 6 acima.
-                $this->con = $this->connector->connect_v6();
+            $connector = new Connector($this->getHost(), $this->getPort(), $this->getUsername(), $this->getPassword(), $this);
+            $this->socket = $connector->getsocket();
+            if (\version_compare($this->getVersion(), "6.43", ">=")) {
+                //conector para versao 6.43 acima.
+                $this->con = $connector->connect_v6();
             } else {
-                $this->connector->connect();
+                //conector para versao abaico de 6.43
+                $this->con = $connector->connect();
             }
         }
     }
 
     /**
      * 
-     * @return type
+     * @return boolean
      */
     public function isLogin() {
-
-//        return parent::isLogin();
+        if ($this->socket) {
+            return $this->con->isLogin();
+        }
+        throw new \Exception("Erro: Not connected, call function 'Talker->initialize'");
     }
 
     /**
@@ -61,7 +71,10 @@ class Talker {
      * @return type
      */
     public function isConnected() {
-//        return parent::isConnected();
+        if ($this->socket) {
+            return $this->socket->isConnected();
+        }
+        throw new \Exception('Not connected, call function "Talker->initialize"');
     }
 
     /**
@@ -69,31 +82,7 @@ class Talker {
      * @return type
      */
     public function isDebug() {
-        return $this->auth->getDebug();
-    }
-
-    /**
-     * 
-     * @return type
-     */
-    public function isTrap() {
-        return $this->reciever->isTrap();
-    }
-
-    /**
-     * 
-     * @return type
-     */
-    public function isDone() {
-        return $this->reciever->isDone();
-    }
-
-    /**
-     * 
-     * @return type
-     */
-    public function isData() {
-        return $this->reciever->isData();
+        //return $this->auth->getDebug();
     }
 
     /**
@@ -101,18 +90,41 @@ class Talker {
      * @param type $sentence
      */
     public function send($sentence = null) {
-        $sentence = $sentence ? $sentence : $this->build->getInstance();
-
-        $this->con->talkerSender->send($sentence);
+        $this->isLogin(); //check login is ok!
+        $this->con->talkerSender->send($sentence ? $sentence : $this->build->getInstance());
         $this->con->talkerReciever->doRecieving();
+        //reset build
+        $this->build();
     }
 
     /**
      * 
-     * @return type
+     * @return ResultUtil
      */
     public function getResult() {
-        return $this->con->talkerReciever->getResult();
+        $this->isLogin(); //check login is ok!
+        
+        $result = $this->con->talkerReciever->getResult();
+        
+        if (defined('MK_RESULT_TYPE')) {
+            switch (strtoupper(constant('MK_RESULT_TYPE'))) {
+                case 'JSON':
+                    return $result->getResultJson();
+                case 'ARRAY':
+                    return $result->getResultArray();
+                case 'XML':
+                    return $result->getResultXml();                    
+            }
+        }
+        return $result->getResultArray();
+    }
+
+    /**
+     * 
+     * @return Talker
+     */
+    public function &get_instance() {
+        return self::$instance;
     }
 
 }

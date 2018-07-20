@@ -55,6 +55,32 @@ class ResultUtil {
         return $ar->getArrayCopy();
     }
 
+    public function getResultJson() {
+        return json_encode($this->getResultArray());
+    }
+
+    public function getResultXml() {
+        $xml_data = new \SimpleXMLElement('<?xml version="1.0"?><data></data>');
+
+        $this->prepareXml($this->getResultArray(), $xml_data);
+
+        return $xml_data->asXML();
+    }
+
+    private function prepareXml($data, &$xml_data) {
+        foreach ($data as $key => $value) {
+            if (is_numeric($key)) {
+                $key = 'item' . $key; //dealing with <0/>..<n/> issues
+            }
+            if (is_array($value)) {
+                $subnode = $xml_data->addChild($key);
+                $this->prepareXml($value, $subnode);
+            } else {
+                $xml_data->addChild("$key", htmlspecialchars("$value"));
+            }
+        }
+    }
+
     private function fireOnChange() {
         $this->itList = $this->list->getIterator();
         $this->listAttr = $this->itList->current();
@@ -65,6 +91,9 @@ class ResultUtil {
     }
 
     public function next() {
+        if(!$this->size()){
+            return FALSE;
+        }
         if ($this->hasNext()) {
             $this->listAttr = $this->itList->current();
             $this->itList->next();
@@ -74,7 +103,7 @@ class ResultUtil {
         }
     }
 
-    public function size() {
+    private function size() {
         return $this->list->count();
     }
 
