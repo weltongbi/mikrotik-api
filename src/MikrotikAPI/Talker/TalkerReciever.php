@@ -129,4 +129,12 @@ class TalkerReciever {
         }
     }
 
+    /**
+     * 
+     * @return $this
+     */
+    public function getInstance() {
+        return $this;
+    }
+
 }

@@ -13,7 +13,6 @@ use MikrotikAPI\Core\Connector,
  * @copyright Copyright (c) 2011, Virtual Think Team.
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @category Libraries
- * @property SentenceUtil $build
  * @property Connector $con
  */
 class Talker {
@@ -23,7 +22,16 @@ class Talker {
     private $talkerSender;
     private $talkerReciever;
     private $con;
+    /**
+     *
+     * @var SentenceUtil 
+     */
     public $build;
+    /**
+     *
+     * @var TalkerReciever 
+     */
+    public $do;
     private $socket;
 
     /**
@@ -73,20 +81,13 @@ class Talker {
 
     /**
      * 
-     * @return type
-     */
-    public function isDebug() {
-        //return $this->auth->getDebug();
-    }
-
-    /**
-     * 
      * @param type $sentence
      */
     public function send($sentence = null) {
         $this->isLogin(); //check login is ok!
         $this->con->talkerSender->send($sentence ? $sentence : $this->build->getInstance());
         $this->con->talkerReciever->doRecieving();
+        $this->do = $this->con->talkerReciever->getInstance();
         //reset build
         $this->build();
     }
@@ -97,9 +98,9 @@ class Talker {
      */
     public function getResult() {
         $this->isLogin(); //check login is ok!
-        
+
         $result = $this->con->talkerReciever->getResult();
-        
+
         if (defined('MK_RESULT_TYPE')) {
             switch (strtoupper(constant('MK_RESULT_TYPE'))) {
                 case 'JSON':
@@ -107,7 +108,7 @@ class Talker {
                 case 'ARRAY':
                     return $result->getResultArray();
                 case 'XML':
-                    return $result->getResultXml();                    
+                    return $result->getResultXml();
             }
         }
         return $result->getResultArray();
