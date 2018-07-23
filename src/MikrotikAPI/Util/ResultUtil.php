@@ -51,9 +51,6 @@ class ResultUtil {
             }
             $ar->append($tmpAr);
         }
-        if (count($ar->getArrayCopy()) === 1) {
-            return ($tmpAr);
-        }
         return $ar->getArrayCopy();
     }
 
