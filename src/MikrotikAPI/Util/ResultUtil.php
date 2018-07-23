@@ -46,12 +46,14 @@ class ResultUtil {
         while ($this->next()) {
             $it = $this->listAttr->getIterator();
             while ($it->valid()) {
-                $tmpAr[$it->current()->getName()] = $it->current()->getValue();
+                    $tmpAr[$it->current()->getName()] = $it->current()->getValue();
                 $it->next();
             }
             $ar->append($tmpAr);
         }
-
+        if (count($ar->getArrayCopy() === 1)) {
+            return ($tmpAr);
+        }
         return $ar->getArrayCopy();
     }
 
@@ -91,7 +93,7 @@ class ResultUtil {
     }
 
     public function next() {
-        if(!$this->size()){
+        if (!$this->size()) {
             return FALSE;
         }
         if ($this->hasNext()) {

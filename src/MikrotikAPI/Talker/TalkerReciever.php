@@ -6,8 +6,7 @@ use MikrotikAPI\Core\Socket,
     MikrotikAPI\Core\StreamReciever,
     MikrotikAPI\Util\ResultUtil,
     MikrotikAPI\Util\Util,
-    MikrotikAPI\Entity\Attribute,
-    MikrotikAPI\Util\DebugDumper;
+    MikrotikAPI\Entity\Attribute;
 
 /**
  * Description of TalkerReciever
@@ -65,21 +64,13 @@ class TalkerReciever {
         return $this->re;
     }
 
-    public function isDebug() {
-        return $this->debug;
-    }
-
-    public function setDebug($boolean) {
-        $this->debug = $boolean;
-    }
-
     private function parseRawToList($raw) {
         if (!empty($raw)) {
             $list = new \ArrayObject();
             foreach ($raw as $value) {
                 $attr = new Attribute();
 
-                if (in_array($value, array('!fatal', '!re', '!trap'))) {
+                if (in_array($value, array('!fatal', '!re', '!trap', '!done'))) {
                     continue;
                 }
 

@@ -73,39 +73,12 @@ class Connector {
         return "00" . $chal;
     }
 
-    public function connect() {
-        if ($this->socket->getConnected()) {
-            //pre commando get challanger
-            $cmd = new SentenceUtil();
-            $cmd->addCommand('/login');
-            $this->talkerSender->send($cmd);
-            $this->talkerReciever->doRecieving();
-            //check receive 'ret'
-            if ($this->talkerReciever->isDone() && $this->talkerReciever->getRet()) {
-                $rec = new SentenceUtil();
-                $rec->addCommand('/login');
-                $rec->setAttribute('name', $this->username);
-                $rec->setAttribute('response', $this->challanger($this->talkerReciever->getRet()));
-                $this->talkerSender->send($rec);
-
-                $this->talkerReciever->doRecieving(); //receive new;                
-                //check login is ok
-                if ($this->talkerReciever->isDone()) { //receive '!done' is ok
-                    $this->login = TRUE;
-                }
-                if ($this->talkerReciever->isTrap()) {
-                    throw new \Exception($this->talkerReciever->getTrapMessage());
-                }
-            }
-        }
-        return $this;
-    }
-
+    
     /**
      * 
      * @return $this
      */
-    public function connect_v6() {
+    public function connect() {
         if ($this->socket->getConnected()) {
             //commando for login
             $cmd = new SentenceUtil();
@@ -114,7 +87,29 @@ class Connector {
             $cmd->setAttribute('password', $this->password);
             $this->talkerSender->send($cmd);
             $this->talkerReciever->doRecieving();
-            
+
+            //check login is ok
+            if ($this->talkerReciever->isDone() && !$this->talkerReciever->getRet()) { //receive '!done' is ok
+                $this->login = TRUE;
+            } else {
+                $this->old_v6_42();
+            }
+            if ($this->talkerReciever->isTrap()) {
+                throw new \Exception($this->talkerReciever->getTrapMessage());
+            }
+        }
+        return $this;
+    }
+
+    private function old_v6_42() {
+        if ($this->talkerReciever->getRet()) {
+            $rec = new SentenceUtil();
+            $rec->addCommand('/login');
+            $rec->setAttribute('name', $this->username);
+            $rec->setAttribute('response', $this->challanger($this->talkerReciever->getRet()));
+            $this->talkerSender->send($rec);
+
+            $this->talkerReciever->doRecieving(); //receive new;                
             //check login is ok
             if ($this->talkerReciever->isDone()) { //receive '!done' is ok
                 $this->login = TRUE;
@@ -123,7 +118,6 @@ class Connector {
                 throw new \Exception($this->talkerReciever->getTrapMessage());
             }
         }
-        return $this;
     }
 
 }

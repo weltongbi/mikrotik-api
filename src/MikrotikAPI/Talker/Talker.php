@@ -45,13 +45,7 @@ class Talker {
         if ($this->getHost() && $this->getUsername()) {
             $connector = new Connector($this->getHost(), $this->getPort(), $this->getUsername(), $this->getPassword(), $this);
             $this->socket = $connector->getsocket();
-            if (\version_compare($this->getVersion(), "6.43", ">=")) {
-                //conector para versao 6.43 acima.
-                $this->con = $connector->connect_v6();
-            } else {
-                //conector para versao abaico de 6.43
-                $this->con = $connector->connect();
-            }
+            $this->con = $connector->connect();
         }
     }
 

@@ -50,11 +50,6 @@ trait Auth {
      * @var int
      */
     private $timeout = 2;
-    /**
-     * 
-     * @var string 
-     */
-    private $version = "6.43";
 
     /**
      * 
@@ -65,9 +60,8 @@ trait Auth {
      * @param int $attempts
      * @param int $delay
      * @param int $timeout
-     * @param string $version versão do mikrotik
      */
-    public function set($host, $port, $username, $password, $attempts, $delay, $timeout, $version) {
+    public function set($host, $port, $username, $password, $attempts, $delay, $timeout) {
         $this->host = $host;
         $this->port = $port;
         $this->username = $username;
@@ -75,7 +69,6 @@ trait Auth {
         $this->attempts = $attempts;
         $this->delay = $delay;
         $this->timeout = $timeout;
-        $this->version = $version;
     }
 
     /**
@@ -116,10 +109,6 @@ trait Auth {
 
     public function getTimeout() {
         return $this->timeout;
-    }
-
-    public function getVersion() {
-        return $this->version;
     }
 
     /**
@@ -176,14 +165,5 @@ trait Auth {
      */
     public function setTimeout($timeout) {
         $this->timeout = $timeout;
-    }
-
-    /**
-     * Default: 6.43 - novo método de login
-     * Para versões mais antigas usar um numero abaixo, ex: 6.42
-     * @param string $version versão do sistema mikrotik
-     */
-    public function setVersion($version) {
-        $this->version = $version;
     }
 }
