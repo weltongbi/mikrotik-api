@@ -10,7 +10,6 @@ use MikrotikAPI\MikrotikAPI;
 
 try {
     $mk = new MikrotikAPI();
-    $mk->setVersion('7');
     $mk->setSimple("192.168.100.25", "admin", "");
     $mk->initialize();
 

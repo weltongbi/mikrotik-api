@@ -6,18 +6,14 @@
  */
 
 require '../vendor/autoload.php';
+use MikrotikAPI\MikrotikAPI;
 
-use MikrotikAPI\Talker\Talker;
-use MikrotikAPI\Entity\Auth;
-use MikrotikAPI\Commands\System\System;
+$mk = new MikrotikAPI();
+$mk->setHost("192.168.100.25");
+$mk->setUsername("admin");
+$mk->setPassword("");
 
-$auth = new Auth();
-$auth->setHost("192.168.100.25");
-$auth->setUsername("admin");
-$auth->setPassword("");
-
-
-$talker = new Talker($auth);
+$mk->initialize();
 
 //test sent to note mikrotik
 $template = <<<'SCRIPT'
@@ -39,5 +35,4 @@ $template = <<<'SCRIPT'
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 SCRIPT;
 
-$note = new System($talker);
-\print_r($note->set_note($template));
+$mk->build->addCommand('/');

@@ -5,13 +5,15 @@ require '../vendor/autoload.php';
 use MikrotikAPI\MikrotikAPI;
 
 $mk = new MikrotikAPI();
-$mk->setVersion('7');
+$mk->setDebug(true);
 $mk->setSimple("192.168.100.25", "admin", "");
 $mk->initialize();
 
 if ($mk->isLogin()) {
-    $mk->build->addCommand("/ip/address/getall");
+    $mk->build->addCommand("/ip/address/add");
+    $mk->build->setAttribute('address', '10.0.0.1/32');
+    $mk->build->setAttribute('interface', 'ether4');
     $mk->send();    
-    $teste = $mk->getResult();
-    print_r($teste->getResultJson());
+    //print_r());
+    print_r($mk->getResult());
 }

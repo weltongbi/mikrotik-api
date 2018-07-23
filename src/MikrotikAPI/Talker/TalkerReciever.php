@@ -23,7 +23,6 @@ class TalkerReciever {
     private $result;
     private $trap = FALSE;
     private $done = FALSE;
-    private $doneMsg;
     private $re = FALSE;
     private $debug = FALSE;
 

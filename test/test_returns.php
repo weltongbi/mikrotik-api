@@ -12,10 +12,13 @@ try {
     $mk = new MikrotikAPI();
     $mk->setDebug(true);
     $mk->setDebug(true);
-    $mk->setSimple("192.168.100.25", "intranet", "123");
+    $mk->setSimple("192.168.100.25", "admin", "");
     $mk->initialize();
 
-    print_r($mk->ip->firewall->address_list->getAll());
+    $mk->build->addCommand('/ip/firewall/filter/getall');
+    //$mk->build->where('chain', '?', 'forward');
+    $mk->send();
+    print_r($mk->getResult());
     
 } catch (Exception $ex) {
     echo $ex->getMessage();
