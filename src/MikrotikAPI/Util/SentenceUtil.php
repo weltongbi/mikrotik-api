@@ -42,7 +42,7 @@ class SentenceUtil {
 
     public function where($name, $operand, $value) {
         if ($operand == "-" || $operand == "=" || $operand == "<" || $operand == ">") {
-            $build = trim($operand) . trim($name) . "=";
+            $build = "?" . trim($operand) . trim($name) . "=";
             $this->list->append(new Attribute("where", $build, trim($value)));
         } else {
             return FALSE;
@@ -121,6 +121,7 @@ class SentenceUtil {
     public function getBuildCommand() {
         return $this->list;
     }
+
     /**
      * 
      * @return $this
