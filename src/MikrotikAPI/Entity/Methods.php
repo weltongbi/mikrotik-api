@@ -93,9 +93,9 @@ trait Methods
             case 'disable':
                 return $this->M_disable($arg[0]);
             case 'reset_counters':
-                return $this->M_disable($arg[0]);
+                return $this->M_resetCounters($arg[0]);
             case 'reset_counters_all':
-                return $this->M_disable($arg[0]);
+                return $this->M_resetAllCounters();
             default:
                 throw new \Exception('The method "'.$name.'()" does not exist!');
         }
@@ -264,11 +264,10 @@ trait Methods
     /**
      * This method is used to reset all counters.
      *
-     * @param string $id
      *
      * @return bool|mixed
      */
-    private function M_resetAllCounters($id)
+    private function M_resetAllCounters()
     {
         $sentence = new SentenceUtil();
         $sentence->fromCommand($this->main.'/reset-counters-all');
