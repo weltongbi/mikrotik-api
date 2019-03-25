@@ -1,4 +1,5 @@
-#Mikrotik Api 2018 - 2019#
+# Mikrotik Api 2018 - 2019 #
+
 ==============
 
 [![Latest Stable Version](https://poser.pugx.org/weltongbi/mikrotik-api/v/stable)](https://packagist.org/packages/weltongbi/mikrotik-api)
@@ -6,6 +7,7 @@
 [![Latest Unstable Version](https://poser.pugx.org/weltongbi/mikrotik-api/v/unstable)](https://packagist.org/packages/weltongbi/mikrotik-api)
 [![License](https://poser.pugx.org/weltongbi/mikrotik-api/license)](https://packagist.org/packages/weltongbi/mikrotik-api)
 [![Build Status](https://travis-ci.org/weltongbi/mikrotik-api.svg?branch=master)](https://travis-ci.org/weltongbi/mikrotik-api)
+[![codecov](https://codecov.io/gh/weltongbi/mikrotik-api/branch/master/graph/badge.svg)](https://codecov.io/gh/weltongbi/mikrotik-api)
 
 - [x] V6 support
 - [x] Direct Commands
