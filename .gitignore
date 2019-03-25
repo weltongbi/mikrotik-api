@@ -1,3 +1,4 @@
 /nbproject/
 /vendor/
 .phpunit.result.cache
+.vscode
