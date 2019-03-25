@@ -82,22 +82,22 @@ trait Methods
         }
 
         switch ($name) {
-            case 'add':
-                return $this->M_add($arg[0]);
-            case 'set':
-                return $this->M_set($arg[0], $arg[1]);
-            case 'remove':
-                return $this->M_remove($arg[0]);
-            case 'enable':
-                return $this->M_enable($arg[0]);
-            case 'disable':
-                return $this->M_disable($arg[0]);
-            case 'reset_counters':
-                return $this->M_resetCounters($arg[0]);
-            case 'reset_counters_all':
-                return $this->M_resetAllCounters();
-            default:
-                throw new \Exception('The method "'.$name.'()" does not exist!');
+        case 'add':
+            return $this->M_add($arg[0]);
+        case 'set':
+            return $this->M_set($arg[0], isset($arg[1]) ? $arg[1] : false);
+        case 'remove':
+            return $this->M_remove($arg[0]);
+        case 'enable':
+            return $this->M_enable($arg[0]);
+        case 'disable':
+            return $this->M_disable($arg[0]);
+        case 'reset_counters':
+            return $this->M_resetCounters($arg[0]);
+        case 'reset_counters_all':
+            return $this->M_resetAllCounters();
+        default:
+            throw new \Exception('The method "'.$name.'()" does not exist!');
         }
     }
 
@@ -184,7 +184,10 @@ trait Methods
     {
         $sentence = new SentenceUtil();
         $sentence->addCommand($this->main.'/set');
-        $sentence->numbers('=', $id);
+
+        if ($id) {
+            $sentence->numbers('=', $id);
+        }
 
         foreach ($param as $name => $value) {
             $sentence->setAttribute($name, $value);
