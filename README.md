@@ -7,12 +7,21 @@
 [![License](https://poser.pugx.org/weltongbi/mikrotik-api/license)](https://packagist.org/packages/weltongbi/mikrotik-api)
 [![Build Status](https://travis-ci.org/weltongbi/mikrotik-api.svg?branch=master)](https://travis-ci.org/weltongbi/mikrotik-api)
 
+- [x] V6 support
+- [x] Direct Commands
+- [x] Autocompletion code for intellisense
+- [ ] Easy Commands
+- [ ] Full phpUnit
+- [ ] Laravel Support
+- [ ] Codeigniter Support
+- [ ] completed
+
 ## Manual: 
 
 #### Requirements
 
 ```sh
-PHP >= 7.1
+PHP >= 7.2
 extension=php_sockets
 ```
 #### Installation:
