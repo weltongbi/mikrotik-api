@@ -28,7 +28,7 @@ class TestCase extends BaseTestCase
         if (empty(self::$mk)) {
             self::$mk = new MikrotikAPI();
             self::$mk->setDebug($_ENV['MikrotikDebug']);
-            self::$mk->setSimple($_ENV['MikrotikIp'], $_ENV['MikrotikUser'], $_ENV['MikrotikPassword']);
+            self::$mk->setSimple($_ENV['MikrotikHost'], $_ENV['MikrotikUser'], $_ENV['MikrotikPassword']);
             self::$mk->initialize();
         }
     }

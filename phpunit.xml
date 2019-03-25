@@ -14,7 +14,7 @@
     </filter>
     <php>
         <env name="MikrotikDebug" value="true"/>
-        <env name="MikrotikIp" value="192.168.100.25"/>
+        <env name="MikrotikHost" value="192.168.100.25"/>
         <env name="MikrotikUser" value="admin"/>
         <env name="MikrotikPassword" value=""/>
     </php>
