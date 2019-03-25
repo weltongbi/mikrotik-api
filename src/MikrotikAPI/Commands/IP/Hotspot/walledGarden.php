@@ -1,31 +1,29 @@
 <?php
 
-namespace MikrotikAPI\Commands\File;
+namespace MikrotikAPI\Commands\IP\Hotspot;
 
-use MikrotikAPI\Util\SentenceUtil,
-    MikrotikAPI\Talker\Talker;
+use MikrotikAPI\Talker\Talker,
+    MikrotikAPI\Util\SentenceUtil;
 
 /**
- * Description of Mapi_File
- *
+ * Description of Server
  * @author Lalu Erfandi Maula Yusnu nunenuh@gmail.com <http://vthink.web.id>
  * @copyright Copyright (c) 2011, Virtual Think Team.
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @category Libraries
  */
-class File {
-
-    use \MikrotikAPI\Entity\Methods;
+class walledGarden {
 
     /**
-     * @access private
-     * @var type array
+     *
+     * @var Talker
      */
     private $talker;
-    private $main = "";
 
     function __construct(Talker $talker) {
         $this->talker = $talker;
     }
+
+    
 
 }

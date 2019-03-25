@@ -1,117 +1,236 @@
 <?php
 
-/*
- * Este codigo foi desenvolvidor por welton castro.
- * Email: weltongbi@gmail.com.
- */
-
 namespace MikrotikAPI\Entity;
 
 use MikrotikAPI\Util\SentenceUtil;
 
 /**
- * Description of methods
+ * Description of trait Methods.
  *
- * @author welton
+ * @author Welton Castro weltongbi@gmail.com <welton.dev>
+ * @copyright Copyright (c) 2018 - 2019
+ *
+ * @see welton.dev
+ *
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ *
+ * @category Commands
+ *
+ * @method mixed add(array $param)             Add by array atributes [name=>value]
+ * @method mixed set(array $param, string $id) Add by array atributes [name=>value] and id
+ * @method mixed remove(string $id)            Remove by id
+ * @method mixed enable(string $id)            Enable by id
+ * @method mixed disable(string $id)           Disable by id
  */
-trait Methods {
-    /*
-     * get all
-     */
+trait Methods
+{
     /**
-     * get all value for main comand
-     * @return Mixed
+     * @var type array
      */
-    public function getAll() {
-        $sentence = new SentenceUtil();
-        $sentence->fromCommand($this->main . "/getall");
-        $this->talker->send($sentence);
-        return $this->talker->getResult();
+    private $_defaultMethods = ['*', 'add', 'set', 'remove', 'enable', 'disable'];
+    /**
+     * @var type string
+     */
+    private $main = '';
+    /**
+     * @var type array
+     */
+    private $allowedMethods = [];
+
+    /**
+     * setAllowedMethods Options:
+     * ['add', 'set', 'remove', 'enable', 'disable']
+     * For all
+     * ['*'].
+     *
+     * @param array|string $methods (value)
+     */
+    private function setAllowedMethods($methods)
+    {
+        if (is_string($methods)) {
+            if ($methods == '*') {
+                return $this->allowedMethods = ['*'];
+            }
+
+            if (count(array_diff([$methods], $this->_defaultMethods)) == 0) {
+                return $this->allowedMethods = [$methods];
+            }
+        } elseif (is_array($methods) && count(array_diff($methods, $this->_defaultMethods)) == 0) {
+            $this->allowedMethods = $methods;
+        } else {
+            throw new \Exception('The method is not available!');
+        }
     }
 
     /**
-     * Print detail
-     * @param string $id id 
+     * setMainCommand command.
+     *
+     * @param string $main command
+     */
+    private function setMainCommand(string $main)
+    {
+        $this->main = $main;
+    }
+
+    public function __call($name, $arg)
+    {
+        if (in_array('*', $this->allowedMethods)) {
+        } elseif (!in_array($name, $this->allowedMethods)) {
+            throw new \Exception('The method "'.$name.'()" does not exist or no allowed!');
+        }
+
+        switch ($name) {
+            case 'add':
+                return $this->M_add($arg[0]);
+            case 'set':
+                return $this->M_set($arg[0], $arg[1]);
+            case 'remove':
+                return $this->M_remove($arg[0]);
+            case 'enable':
+                return $this->M_enable($arg[0]);
+            case 'disable':
+                return $this->M_disable($arg[0]);
+            default:
+                throw new \Exception('The method "'.$name.'()" does not exist!');
+        }
+    }
+
+    /**
+     * get all value for main command.
+     *
      * @return mixed
      */
-    public function detail($id) {
+    public function getAll()
+    {
         $sentence = new SentenceUtil();
-        $sentence->fromCommand($this->main . "/print");
-        $sentence->where(".id", "=", $id);
+        $sentence->fromCommand($this->main.'/getall');
         $this->talker->send($sentence);
+
         return $this->talker->getResult();
     }
 
     /**
-     * Remove item by id
+     * Print detail.
+     *
+     * @param string $id id
+     *
+     * @return mixed
+     */
+    public function detail($id)
+    {
+        $sentence = new SentenceUtil();
+        $sentence->fromCommand($this->main.'/print');
+        $sentence->where('.id', '=', $id);
+        $this->talker->send($sentence);
+
+        return $this->talker->getResult();
+    }
+
+    /**
+     * Remove item by id.
+     *
      * @param string $id
+     *
      * @return mixed
      */
-    private function M_remove($id) {
+    private function M_remove($id)
+    {
         $sentence = new SentenceUtil();
-        $sentence->addCommand($this->main . "/remove");
-        $sentence->where(".id", "=", $id);
+        $sentence->addCommand($this->main.'/remove');
+        $sentence->numbers('=', $id);
         $this->talker->send($sentence);
+
+        if ($this->talker->do->isDone()) {
+            return true;
+        }
+
         return $this->talker->getResult();
     }
 
     /**
-     * Add by array
+     * Add by array.
+     *
      * @param array $param (name ad value)
+     *
      * @return mixed
      */
-    private function M_add(array $param) {
+    private function M_add(array $param)
+    {
         $sentence = new SentenceUtil();
-        $sentence->addCommand($this->main . "/add");
+        $sentence->addCommand($this->main.'/add');
         foreach ($param as $name => $value) {
             $sentence->setAttribute($name, $value);
         }
         $this->talker->send($sentence);
+
         return $this->talker->getResult();
     }
 
     /**
-     * Set by id
-     * @param array $param (name and value)
+     * Set by id.
+     *
+     * @param array  $param (name and value)
      * @param string $id
-     * @return mixed
+     *
+     * @return bool|mixed
      */
-    private function M_set(array $param, $id) {
+    private function M_set(array $param, $id)
+    {
         $sentence = new SentenceUtil();
-        $sentence->addCommand($this->main . "/set");
+        $sentence->addCommand($this->main.'/set');
+        $sentence->numbers('=', $id);
+
         foreach ($param as $name => $value) {
             $sentence->setAttribute($name, $value);
         }
-        $sentence->where(".id", "=", $id);
         $this->talker->send($sentence);
+
+        if ($this->talker->do->isDone()) {
+            return true;
+        }
+
         return $this->talker->getResult();
     }
 
     /**
-     * This method is used to enable by id
-     * @param string $id 
-     * @return mixed
-     * 
+     * This method is used to enable by id.
+     *
+     * @param string $id
+     *
+     * @return bool|mixed
      */
-    private function M_enable($id) {
+    private function M_enable($id)
+    {
         $sentence = new SentenceUtil();
-        $sentence->addCommand($this->main . "/enable");
-        $sentence->where(".id", "=", $id);
+        $sentence->addCommand($this->main.'/enable');
+        $sentence->numbers('=', $id);
         $this->talker->send($sentence);
+
+        if ($this->talker->do->isDone()) {
+            return true;
+        }
+
         return $this->talker->getResult();
     }
 
     /**
-     * This method is used to disable by id
-     * @param string $id 
-     * @return mixed
+     * This method is used to disable by id.
+     *
+     * @param string $id
+     *
+     * @return bool|mixed
      */
-    private function M_disable($id) {
+    private function M_disable($id)
+    {
         $sentence = new SentenceUtil();
-        $sentence->addCommand($this->main . "/disable");
-        $sentence->where(".id", "=", $id);
+        $sentence->addCommand($this->main.'/disable');
+        $sentence->numbers('=', $id);
         $this->talker->send($sentence);
+
+        if ($this->talker->do->isDone()) {
+            return true;
+        }
+
         return $this->talker->getResult();
     }
-
 }

@@ -3,87 +3,57 @@
 namespace MikrotikAPI\Commands\IP\Firewall;
 
 use MikrotikAPI\Talker\Talker;
-use MikrotikAPI\Commands\IP\Firewall\Filter,
-    MikrotikAPI\Commands\IP\Firewall\NAT,
-    MikrotikAPI\Commands\IP\Firewall\Mangle,
-    MikrotikAPI\Commands\IP\Firewall\ServicePort,
-    MikrotikAPI\Commands\IP\Firewall\Connection,
-    MikrotikAPI\Commands\IP\Firewall\AddressList,
-    MikrotikAPI\Commands\IP\Firewall\Layer7Protocol;
 
 /**
- * Description of Firewall
- * @author Lalu Erfandi Maula Yusnu nunenuh@gmail.com <http://vthink.web.id>
- * @copyright Copyright (c) 2011, Virtual Think Team.
+ * Description of Firewall.
+ *
+ * @author Welton Castro weltongbi@gmail.com <welton.dev>
+ * @copyright Copyright (c) 2018 - 2019
+ *
+ * @see welton.dev
+ *
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
- * @category Libraries
+ *
+ * @category Commands
+ *
+ * @property AddressList    $address_list    Instance IP\Firewall\AddressList
+ * @property Connection     $connection      Instance IP\Firewall\Connection
+ * @property Filter         $filter          Instance IP\Firewall\Filter
+ * @property Layer7Protocol $layer7_protocol Instance IP\Firewall\Layer7Protocol
+ * @property Mangle         $mangle          Instance IP\Firewall\Mangle
+ * @property NAT            $nat             Instance IP\Firewall\NAT
+ * @property Raw            $raw             Instance IP\Firewall\Raw
+ * @property ServicePort    $service_port    Instance IP\Firewall\ServicePort
  */
-class Firewall {
-
+class Firewall
+{
     /**
-     *
      * @var type array
      */
     private $talker;
+    private $class = [
+        'address_list' => 'MikrotikAPI\Commands\IP\Firewall\AddressList',
+        'connection' => 'MikrotikAPI\Commands\IP\Firewall\Connection',
+        'filter' => 'MikrotikAPI\Commands\IP\Firewall\Filter',
+        'layer7_protocol' => 'MikrotikAPI\Commands\IP\Firewall\Layer7Protocol',
+        'mangle' => 'MikrotikAPI\Commands\IP\Firewall\Mangle',
+        'nat' => 'MikrotikAPI\Commands\IP\Firewall\NAT',
+        'raw' => 'MikrotikAPI\Commands\IP\Firewall\Raw',
+        'service_port' => 'MikrotikAPI\Commands\IP\Firewall\ServicePort',
+    ];
 
-    function __construct(Talker $talker) {
+    public function __construct(Talker $talker)
+    {
         $this->talker = $talker;
     }
 
-    /**
-     * 
-     * @return \MikrotikAPI\Commands\IP\Firewall\Filter
-     */
-    public function filter() {
-        return new Filter($this->talker);
-    }
+    public function __get($name)
+    {
+        if ($this->class[$name]) {
+            $class = $this->class[$name];
 
-    /**
-     * 
-     * @return \MikrotikAPI\Commands\IP\Firewall\NAT
-     */
-    public function NAT() {
-        return new NAT($this->talker);
+            return new $class($this->talker);
+        }
+        throw new \Exception('The method not exist');
     }
-
-    /**
-     * 
-     * @return \MikrotikAPI\Commands\IP\Firewall\Mangle
-     */
-    public function mangle() {
-        return new Mangle($this->talker);
-    }
-
-    /**
-     * 
-     * @return \MikrotikAPI\Commands\IP\Firewall\ServicePort
-     */
-    public function servicePort() {
-        return new ServicePort($this->talker);
-    }
-
-    /**
-     * 
-     * @return \MikrotikAPI\Commands\IP\Firewall\Connection
-     */
-    public function connection() {
-        return new Connection($this->talker);
-    }
-
-    /**
-     * 
-     * @return \MikrotikAPI\Commands\IP\Firewall\AddressList
-     */
-    public function addressList() {
-        return new AddressList($this->talker);
-    }
-
-    /**
-     * 
-     * @return \MikrotikAPI\Commands\IP\Firewall\Layer7Protocol
-     */
-    public function layer7Protocol() {
-        return new Layer7Protocol($this->talker);
-    }
-
 }

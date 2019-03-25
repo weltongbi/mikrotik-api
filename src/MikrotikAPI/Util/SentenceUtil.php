@@ -5,133 +5,161 @@ namespace MikrotikAPI\Util;
 use MikrotikAPI\Entity\Attribute;
 
 /**
- * Description of SentenceUtil
+ * Description of SentenceUtil.
  *
  * @author      Lalu Erfandi Maula Yusnu nunenuh@gmail.com <http://vthink.web.id>
  * @copyright   Copyright (c) 2011, Virtual Think Team.
  * @license     http://opensource.org/licenses/gpl-license.php GNU Public License
- * @category	Libraries
+ *
+ * @category    Libraries
  */
-class SentenceUtil {
-
+class SentenceUtil
+{
     private $list;
 
     /**
-     * Sentença de comandos
+     * Sentença de comandos.
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->list = new \ArrayObject();
     }
 
-    public function select($attributeName) {
-        $name = "";
-        if (Util::contains($attributeName, " ")) {
-            $token = explode(" ", $attributeName);
+    public function select($attributeName)
+    {
+        $name = '';
+        if (Util::contains($attributeName, ' ')) {
+            $token = explode(' ', $attributeName);
             $a = 0;
             while ($a < count($token)) {
-                $name = $name . current($token);
+                $name = $name.current($token);
                 next($token);
-                $a++;
+                ++$a;
             }
         } else {
             $name = $attributeName;
         }
 
-        $this->list->append(new Attribute("select", "proplist", $name));
+        $this->list->append(new Attribute('select', 'proplist', $name));
     }
 
-    public function where($name, $operand, $value) {
-        if ($operand == "-" || $operand == "=" || $operand == "<" || $operand == ">") {
-            $build = "?" . trim($operand) . trim($name) . "=";
-            $this->list->append(new Attribute("where", $build, trim($value)));
+    public function numbers(string $operand, $id)
+    {
+        if ($operand == '-' || $operand == '=' || $operand == '<' || $operand == '>') {
+            $build = trim($operand).trim('.id').'=';
+            $this->list->append(new Attribute('where', $build, trim($id)));
         } else {
-            return FALSE;
+            return false;
         }
     }
 
-    public function whereNot($name, $operand, $value) {
-        if ($operand == "-" || $operand == "=" || $operand == "<" || $operand == ">") {
-            $build = "?" . trim($operand) . trim($name) . "=";
-            $this->list->append(new Attribute("whereNot", $build, trim($value)));
-            $this->list->append(new Attribute("whereNot", "?#", "!"));
-            return TRUE;
+    public function where($name, $operand, $value)
+    {
+        if ($operand == '-' || $operand == '=' || $operand == '<' || $operand == '>') {
+            $build = '?'.trim($operand).trim($name).'=';
+            $this->list->append(new Attribute('where', $build, trim($value)));
         } else {
-            return FALSE;
+            return false;
         }
     }
 
-    public function orWhere($name, $operand, $value) {
-        if ($operand == "-" || $operand == "=" || $operand == "<" || $operand == ">") {
-            $build = "?" . trim($operand) . trim($name) . "=";
-            $this->list->append(new Attribute("whereNot", $build, trim($value)));
-            $this->list->append(new Attribute("whereNot", "?#", "|"));
-            return TRUE;
+    public function whereNot($name, $operand, $value)
+    {
+        if ($operand == '-' || $operand == '=' || $operand == '<' || $operand == '>') {
+            $build = '?'.trim($operand).trim($name).'=';
+            $this->list->append(new Attribute('whereNot', $build, trim($value)));
+            $this->list->append(new Attribute('whereNot', '?#', '!'));
+
+            return true;
         } else {
-            return FALSE;
+            return false;
         }
     }
 
-    public function orWhereNot($name, $operand, $value) {
-        if ($operand == "-" || $operand == "=" || $operand == "<" || $operand == ">") {
-            $build = "?" . trim($operand) . trim($name) . "=";
-            $this->list->append(new Attribute("whereNot", $build, trim($value)));
-            $this->list->append(new Attribute("whereNot", "?#", "!"));
-            $this->list->append(new Attribute("whereNot", "?#", "|"));
-            return TRUE;
+    public function orWhere($name, $operand, $value)
+    {
+        if ($operand == '-' || $operand == '=' || $operand == '<' || $operand == '>') {
+            $build = '?'.trim($operand).trim($name).'=';
+            $this->list->append(new Attribute('whereNot', $build, trim($value)));
+            $this->list->append(new Attribute('whereNot', '?#', '|'));
+
+            return true;
         } else {
-            return FALSE;
+            return false;
         }
     }
 
-    public function andWhere($name, $operand, $value) {
-        if ($operand == "-" || $operand == "=" || $operand == "<" || $operand == ">") {
-            $build = "?" . trim($operand) . trim($name) . "=";
-            $this->list->append(new Attribute("whereNot", $build, trim($value)));
-            $this->list->append(new Attribute("whereNot", "?#", "&"));
-            return TRUE;
+    public function orWhereNot($name, $operand, $value)
+    {
+        if ($operand == '-' || $operand == '=' || $operand == '<' || $operand == '>') {
+            $build = '?'.trim($operand).trim($name).'=';
+            $this->list->append(new Attribute('whereNot', $build, trim($value)));
+            $this->list->append(new Attribute('whereNot', '?#', '!'));
+            $this->list->append(new Attribute('whereNot', '?#', '|'));
+
+            return true;
         } else {
-            return FALSE;
+            return false;
         }
     }
 
-    public function andWhereNot($name, $operand, $value) {
-        if ($operand == "-" || $operand == "=" || $operand == "<" || $operand == ">") {
-            $build = "?" . trim($operand) . trim($name) . "=";
-            $this->list->append(new Attribute("whereNot", $build, trim($value)));
-            $this->list->append(new Attribute("whereNot", "?#", "!"));
-            $this->list->append(new Attribute("whereNot", "?#", "&"));
-            return TRUE;
+    public function andWhere($name, $operand, $value)
+    {
+        if ($operand == '-' || $operand == '=' || $operand == '<' || $operand == '>') {
+            $build = '?'.trim($operand).trim($name).'=';
+            $this->list->append(new Attribute('whereNot', $build, trim($value)));
+            $this->list->append(new Attribute('whereNot', '?#', '&'));
+
+            return true;
         } else {
-            return FALSE;
+            return false;
         }
     }
 
-    public function fromCommand($command) {
-        $this->list->append(new Attribute("commandPrint", "command", $command));
+    public function andWhereNot($name, $operand, $value)
+    {
+        if ($operand == '-' || $operand == '=' || $operand == '<' || $operand == '>') {
+            $build = '?'.trim($operand).trim($name).'=';
+            $this->list->append(new Attribute('whereNot', $build, trim($value)));
+            $this->list->append(new Attribute('whereNot', '?#', '!'));
+            $this->list->append(new Attribute('whereNot', '?#', '&'));
+
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public function addCommand($command) {
-        $this->list->append(new Attribute("commandReguler", "command", $command));
+    public function fromCommand($command)
+    {
+        $this->list->append(new Attribute('commandPrint', 'command', $command));
     }
 
-    public function setAttribute($name, $value) {
-        $this->list->append(new Attribute("setAttribute", $name, $value));
+    public function addCommand($command)
+    {
+        $this->list->append(new Attribute('commandReguler', 'command', $command));
     }
 
-    public function getBuildCommand() {
+    public function setAttribute($name, $value)
+    {
+        $this->list->append(new Attribute('setAttribute', $name, $value));
+    }
+
+    public function getBuildCommand()
+    {
         return $this->list;
     }
 
     /**
-     * 
      * @return $this
      */
-    public function getInstance() {
+    public function getInstance()
+    {
         return $this;
     }
 
-    public function add(Attribute $attr) {
+    public function add(Attribute $attr)
+    {
         $this->list->append($attr);
     }
-
 }

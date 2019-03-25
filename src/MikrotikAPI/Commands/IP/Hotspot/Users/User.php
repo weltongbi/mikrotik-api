@@ -1,43 +1,29 @@
 <?php
 
-namespace MikrotikAPI\Commands\IP\Hotspot;
+namespace MikrotikAPI\Commands\IP\Hotspot\Users;
 
 use MikrotikAPI\Talker\Talker;
-use MikrotikAPI\Commands\IP\Hotspot\Users\User;
+use MikrotikAPI\Util\SentenceUtil;
 
 /**
- * Description of Hotspot.
+ * Description of Users.
  *
  * @author Lalu Erfandi Maula Yusnu nunenuh@gmail.com <http://vthink.web.id>
  * @copyright Copyright (c) 2011, Virtual Think Team.
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  *
- * @category Libraries
+ * @category name
  *
- * @property Active       $active        HostSpot Active
- * @property Cookie       $cookie        HostSpot Cookie
- * @property Host         $host          HostSpot Host
- * @property IPBinding    $ip_binding    HostSpot Ip-blinding
- * @property Profile      $profile       HostSpot Profile
- * @property ServicePort  $service_port  HostSpot Service port
- * @property User         $user          HostSpot Users
- * @property walledGarden $walled_garden HostSpot walled Garden
+ * @property Profile $profile Profile User
  */
-class Hotspot
+class User
 {
     /**
      * @var Talker
      */
     private $talker;
     private $class = [
-        'active' => 'MikrotikAPI\Commands\IP\Hotspot\Active',
-        'cookie' => 'MikrotikAPI\Commands\IP\Hotspot\Cookie',
-        'host' => 'MikrotikAPI\Commands\IP\Hotspot\Host',
-        'ip_binding' => 'MikrotikAPI\Commands\IP\Hotspot\IPBinding',
-        'profile' => 'MikrotikAPI\Commands\IP\Hotspot\Profile',
-        'service_port' => 'MikrotikAPI\Commands\IP\Hotspot\ServicePort',
-        'user' => 'MikrotikAPI\Commands\IP\Hotspot\Users\User',
-        'walled_garden' => 'MikrotikAPI\Commands\IP\Hotspot\walledGarden', // o proprio hostport
+        'profile' => 'MikrotikAPI\Commands\IP\Hotspot\Users\Profile',
     ];
 
     public function __construct(Talker $talker)
@@ -45,13 +31,6 @@ class Hotspot
         $this->talker = $talker;
     }
 
-    /**
-     * @param string $name
-     *
-     * @return \MikrotikAPI\Commands\IP\Hotspot\$name
-     *
-     * @throws \Exception
-     */
     public function __get($name)
     {
         if ($this->class[$name]) {
@@ -59,7 +38,7 @@ class Hotspot
 
             return new $class($this->talker);
         }
-        throw new \Exception('The method not exist in HotSpot');
+        throw new \Exception('The method not exist in HotSpot/Users');
     }
 
     /**
@@ -70,13 +49,13 @@ class Hotspot
     public function add($param)
     {
         $sentence = new SentenceUtil();
-        $sentence->addCommand('/ip/hotspot/add');
+        $sentence->addCommand('/ip/hotspot/user/add');
         foreach ($param as $name => $value) {
             $sentence->setAttribute($name, $value);
         }
         $this->talker->send($sentence);
 
-        return 'Sucsess';
+        return $this->talker->getResult();
     }
 
     /**
@@ -89,11 +68,11 @@ class Hotspot
     public function delete($id)
     {
         $sentence = new SentenceUtil();
-        $sentence->addCommand('/ip/hotspot/remove');
+        $sentence->addCommand('/ip/hotspot/user/remove');
         $sentence->where('.id', '=', $id);
-        $enable = $this->talker->send($sentence);
+        $this->talker->send($sentence);
 
-        return 'Sucsess';
+        return $this->talker->getResult();
     }
 
     /**
@@ -106,11 +85,11 @@ class Hotspot
     public function enable($id)
     {
         $sentence = new SentenceUtil();
-        $sentence->addCommand('/ip/hotspot/enable');
+        $sentence->addCommand('/ip/hotspot/user/enable');
         $sentence->where('.id', '=', $id);
-        $enable = $this->talker->send($sentence);
+        $this->talker->send($sentence);
 
-        return 'Sucsess';
+        return $this->talker->getResult();
     }
 
     /**
@@ -123,11 +102,28 @@ class Hotspot
     public function disable($id)
     {
         $sentence = new SentenceUtil();
-        $sentence->addCommand('/ip/hotspot/disable');
+        $sentence->addCommand('/ip/hotspot/user/disable');
         $sentence->where('.id', '=', $id);
-        $disable = $this->talker->send($sentence);
+        $this->talker->send($sentence);
 
-        return 'Sucsess';
+        return $this->talker->getResult();
+    }
+
+    /**
+     * This method is used to reset uptime and trafic counters for hotspot by id.
+     *
+     * @param type $id string
+     *
+     * @return type array
+     */
+    public function resetCounter($id)
+    {
+        $sentence = new SentenceUtil();
+        $sentence->addCommand('/ip/hotspot/user/reset-counter');
+        $sentence->where('.id', '=', $id);
+        $this->talker->send($sentence);
+
+        return $this->talker->getResult();
     }
 
     /**
@@ -141,7 +137,7 @@ class Hotspot
     public function set($param, $id)
     {
         $sentence = new SentenceUtil();
-        $sentence->addCommand('/ip/hotspot/set');
+        $sentence->addCommand('/ip/hotspot/user/set');
         foreach ($param as $name => $value) {
             $sentence->setAttribute($name, $value);
         }
@@ -159,15 +155,10 @@ class Hotspot
     public function getAll()
     {
         $sentence = new SentenceUtil();
-        $sentence->fromCommand('/ip/hotspot/getall');
+        $sentence->fromCommand('/ip/hotspot/user/getall');
         $this->talker->send($sentence);
-        $rs = $this->talker->getResult();
-        $i = 0;
-        if ($i < $rs->size()) {
-            return $rs->getResultArray();
-        } else {
-            return 'No IP Hotspot To Set, Please Your Add IP Hotspot';
-        }
+
+        return $this->talker->getResult();
     }
 
     /**
@@ -181,15 +172,10 @@ class Hotspot
     public function detail($id)
     {
         $sentence = new SentenceUtil();
-        $sentence->fromCommand('/ip/hotspot/print');
+        $sentence->fromCommand('/ip/hotspot/user/print');
         $sentence->where('.id', '=', $id);
         $this->talker->send($sentence);
-        $rs = $this->talker->getResult();
-        $i = 0;
-        if ($i < $rs->size()) {
-            return $rs->getResultArray();
-        } else {
-            return 'No IP Hotspot With This id = '.$id;
-        }
+
+        return $this->talker->getResult();
     }
 }

@@ -3,155 +3,66 @@
 namespace MikrotikAPI\Commands\IP;
 
 use MikrotikAPI\Talker\Talker;
-use MikrotikAPI\Commands\IP\Address,
-    MikrotikAPI\Commands\IP\Hotspot\Hotspot,
-    MikrotikAPI\Commands\IP\Pool,
-    MikrotikAPI\Commands\IP\DNS,
-    MikrotikAPI\Commands\IP\Firewall\Firewall,
-    MikrotikAPI\Commands\IP\Accounting,
-    MikrotikAPI\Commands\IP\ARP,
-    MikrotikAPI\Commands\IP\DHCPClient,
-    MikrotikAPI\Commands\IP\DHCPServer,
-    MikrotikAPI\Commands\IP\DHCPRelay,
-    MikrotikAPI\Commands\IP\Route,
-    MikrotikAPI\Commands\IP\Service,
-    MikrotikAPI\Commands\IP\WebProxy;
+use MikrotikAPI\Commands\IP\Hotspot\Hotspot;
+use MikrotikAPI\Commands\IP\Firewall\Firewall;
 
 /**
- * Description of IP
+ * Description of IP.
  *
  * @author      Lalu Erfandi Maula Yusnu nunenuh@gmail.com <http://vthink.web.id>
  * @copyright   Copyright (c) 2011, Virtual Think Team.
  * @license     http://opensource.org/licenses/gpl-license.php GNU Public License
+ *
  * @category	 Libraries
+ *
+ * @property Address    $address    Description
+ * @property Hotspot    $hotspot    Description
+ * @property Pool       $pool       Description
+ * @property DNS        $dns        Description
+ * @property Firewall   $firewall   Description
+ * @property Accounting $accounting Description
+ * @property ARP        $arp        Description
+ * @property DHCPClient $dhcpclient Description
+ * @property DHCPServer $dhcpserver Description
+ * @property DHCPRelay  $dhcprelay  Description
+ * @property Route      $route      Description
+ * @property Service    $service    Description
+ * @property WebProxy   $webproxy   Description
  */
-class IP {
-
+class IP
+{
     /**
-     *
      * @var type array
      */
     private $talker;
+    private $class = [
+        'address' => 'MikrotikAPI\Commands\IP\Address',
+        'hotspot' => 'MikrotikAPI\Commands\IP\Hotspot\Hotspot',
+        'pool' => 'MikrotikAPI\Commands\IP\Pool',
+        'dns' => 'MikrotikAPI\Commands\IP\DNS',
+        'firewall' => 'MikrotikAPI\Commands\IP\Firewall\Firewall',
+        'accounting' => 'MikrotikAPI\Commands\IP\Accounting',
+        'arp' => 'MikrotikAPI\Commands\IP\ARP',
+        'dhcpclient' => 'MikrotikAPI\Commands\IP\DHCPClient',
+        'dhcpserver' => 'MikrotikAPI\Commands\IP\DHCPServer',
+        'dhcprelay' => 'MikrotikAPI\Commands\IP\DHCPRelay',
+        'route' => 'MikrotikAPI\Commands\IP\Route',
+        'service' => 'MikrotikAPI\Commands\IP\Service',
+        'webproxy' => 'MikrotikAPI\Commands\IP\WebProxy',
+    ];
 
-    function __construct(Talker $talker) {
+    public function __construct(Talker $talker)
+    {
         $this->talker = $talker;
     }
 
-    /**
-     * This method is use for call instantiate object of class
-     * \MikrotikAPI\Commands\IP\Address
-     * @return \MikrotikAPI\Commands\IP\Address
-     */
-    public function address() {
-        return new Address($this->talker);
-    }
+    public function __get($name)
+    {
+        if ($this->class[$name]) {
+            $class = $this->class[$name];
 
-    /**
-     * This method is use for call instantiate object of class
-     * \MikrotikAPI\Commands\IP\Hotspot\Hotspot
-     * @return \MikrotikAPI\Commands\IP\Hotspot\Hotspot
-     */
-    public function hotspot() {
-        return new Hotspot($this->talker);
+            return new $class($this->talker);
+        }
+        throw new \Exception('The method not exist');
     }
-
-    /**
-     * This method is use for call instantiate object of class
-     * \MikrotikAPI\Commands\IP\Pool
-     * @return \MikrotikAPI\Commands\IP\Pool
-     */
-    public function pool() {
-        return new Pool($this->talker);
-    }
-
-    /**
-     * This method is use for call instantiate object of class
-     * \MikrotikAPI\Commands\IP\DNS
-     * @return \MikrotikAPI\Commands\IP\DNS
-     */
-    public function DNS() {
-        return new DNS($this->talker);
-    }
-
-    /**
-     * This method is use for call instantiate object of class
-     * \MikrotikAPI\Commands\IP\Firewall\Firewall
-     * @return \MikrotikAPI\Commands\IP\Firewall\Firewall
-     */
-    public function firewall() {
-        return new Firewall($this->talker);
-    }
-
-    /**
-     * This method is use for call instantiate object of class
-     * \MikrotikAPI\Commands\IP\Accounting
-     * @return \MikrotikAPI\Commands\IP\Accounting
-     */
-    public function accounting() {
-        return new Accounting($this->talker);
-    }
-
-    /**
-     * This method is use for call instantiate object of class
-     * \MikrotikAPI\Commands\IP\ARP
-     * @return \MikrotikAPI\Commands\IP\ARP
-     */
-    public function ARP() {
-        return new ARP($this->talker);
-    }
-
-    /**
-     * This method is use for call instantiate object of class
-     * \MikrotikAPI\Commands\IP\DHCPClient
-     * @return \MikrotikAPI\Commands\IP\DHCPClient
-     */
-    public function DHCPClient() {
-        return new DHCPClient($this->talker);
-    }
-
-    /**
-     * This method is use for call instantiate object of class
-     * \MikrotikAPI\Commands\IP\DHCPRelay
-     * @return \MikrotikAPI\Commands\IP\DHCPRelay
-     */
-    public function DHCPRelay() {
-        return new DHCPRelay($this->talker);
-    }
-
-    /**
-     * This method is use for call instantiate object of class
-     * \MikrotikAPI\Commands\IP\DHCPServer
-     * @return \MikrotikAPI\Commands\IP\DHCPServer
-     */
-    public function DHCPServer() {
-        return new DHCPServer($this->talker);
-    }
-
-    /**
-     * This method is use for call instantiate object of class
-     * \MikrotikAPI\Commands\IP\Route
-     * @return \MikrotikAPI\Commands\IP\Route
-     */
-    public function route() {
-        return new Route($this->talker);
-    }
-
-    /**
-     * This method is use for call instantiate object of class
-     * \MikrotikAPI\Commands\IP\Service
-     * @return \MikrotikAPI\Commands\IP\Service
-     */
-    public function service() {
-        return new Service($this->talker);
-    }
-
-    /**
-     * This method is use for call instantiate object of class
-     * \MikrotikAPI\Commands\IP\WebProxy
-     * @return \MikrotikAPI\Commands\IP\WebProxy
-     */
-    public function proxy() {
-        return new WebProxy($this->talker);
-    }
-
 }
