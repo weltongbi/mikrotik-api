@@ -1,6 +1,6 @@
 {
   "name": "weltongbi/mikrotik-api",
-  "description": "Mikrotik API PHP Library for working with RouterOS API 2018",
+  "description": "Mikrotik API PHP Library for working with RouterOS API 2019",
   "type": "library",
   "time": "2018-07-12",
   "keywords": [
@@ -20,14 +20,14 @@
     {
       "name": "Welton Castro",
       "email": "weltongbi@gmail.com",
-      "homepage": "http://intranet.br.com"
+      "homepage": "https://welton.dev"
     }
   ],
   "require": {
     "php": ">=7.1"
   },
   "require-dev": {
-    "phpunit/phpunit": "^7 || ^8"
+    "phpunit/phpunit": "^6||^7||^8"
   },
   "autoload": {
     "psr-0": {

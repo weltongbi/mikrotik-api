@@ -19,7 +19,7 @@ class Layer7ProtocolTest extends TestCase
 
     public function testAddLayer7Protocol()
     {
-        $return = self::$mk->ip->firewall->layer7_protocol->add(['name' => 'test', 'regexp' => '^(.*test.welton.dev.*)$']);
+        $return = self::$mk->ip->firewall->layer7_protocol->add(['name' => $this->randomName(), 'regexp' => '^(.*test.welton.dev.*)$']);
 
         $this->assertIsArray($return);
         $this->assertArrayHasKey(0, $return);

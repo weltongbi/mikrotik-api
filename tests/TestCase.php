@@ -32,4 +32,16 @@ class TestCase extends BaseTestCase
             self::$mk->initialize();
         }
     }
+
+    public static function randomName()
+    {
+        $tamanho = mt_rand(5, 9);
+        $all_str = 'abcdefghijlkmnopqrstuvxyzwABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+        $nome = '';
+        for ($i = 0; $i <= $tamanho; ++$i) {
+            $nome .= $all_str[mt_rand(0, 61)];
+        }
+
+        return $nome;
+    }
 }

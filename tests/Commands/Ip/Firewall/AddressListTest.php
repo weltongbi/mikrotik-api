@@ -19,7 +19,7 @@ class AddressListTest extends TestCase
 
     public function testAddAddressList()
     {
-        $return = self::$mk->ip->firewall->address_list->add(['list' => 'test', 'address' => '10.10.10.2']);
+        $return = self::$mk->ip->firewall->address_list->add(['list' => $this->randomName(), 'address' => '10.10.10.2']);
 
         $this->assertIsArray($return);
         $this->assertArrayHasKey(0, $return);
