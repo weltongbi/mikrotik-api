@@ -21,13 +21,15 @@ use MikrotikAPI\Util\SentenceUtil;
  * @method mixed remove(string $id)            Remove by id
  * @method mixed enable(string $id)            Enable by id
  * @method mixed disable(string $id)           Disable by id
+ * @method mixed reset_counters(string $id)    Reset Counters by id
+ * @method mixed reset_counters_all()          Reset All Counters
  */
 trait Methods
 {
     /**
      * @var type array
      */
-    private $_defaultMethods = ['*', 'add', 'set', 'remove', 'enable', 'disable'];
+    private $_defaultMethods = ['*', 'add', 'set', 'remove', 'enable', 'disable', 'reset_counters', 'reset_counters_all'];
     /**
      * @var type string
      */
@@ -39,7 +41,7 @@ trait Methods
 
     /**
      * setAllowedMethods Options:
-     * ['add', 'set', 'remove', 'enable', 'disable']
+     * ['add', 'set', 'remove', 'enable', 'disable', 'reset_counters', 'reset_counters_all']
      * For all
      * ['*'].
      *
@@ -89,6 +91,10 @@ trait Methods
             case 'enable':
                 return $this->M_enable($arg[0]);
             case 'disable':
+                return $this->M_disable($arg[0]);
+            case 'reset_counters':
+                return $this->M_disable($arg[0]);
+            case 'reset_counters_all':
                 return $this->M_disable($arg[0]);
             default:
                 throw new \Exception('The method "'.$name.'()" does not exist!');
@@ -225,6 +231,47 @@ trait Methods
         $sentence = new SentenceUtil();
         $sentence->addCommand($this->main.'/disable');
         $sentence->numbers('=', $id);
+        $this->talker->send($sentence);
+
+        if ($this->talker->do->isDone()) {
+            return true;
+        }
+
+        return $this->talker->getResult();
+    }
+
+    /**
+     * This method is used to reset counters by id.
+     *
+     * @param string $id
+     *
+     * @return bool|mixed
+     */
+    private function M_resetCounters($id)
+    {
+        $sentence = new SentenceUtil();
+        $sentence->addCommand($this->main.'/reset-counters');
+        $sentence->numbers('=', $id);
+        $this->talker->send($sentence);
+
+        if ($this->talker->do->isDone()) {
+            return true;
+        }
+
+        return $this->talker->getResult();
+    }
+
+    /**
+     * This method is used to reset all counters.
+     *
+     * @param string $id
+     *
+     * @return bool|mixed
+     */
+    private function M_resetAllCounters($id)
+    {
+        $sentence = new SentenceUtil();
+        $sentence->fromCommand($this->main.'/reset-counters-all');
         $this->talker->send($sentence);
 
         if ($this->talker->do->isDone()) {

@@ -10,11 +10,13 @@
 - [x] V6 support
 - [x] Direct Commands
 - [x] Autocompletion code for intellisense
-- [ ] Easy Commands
-- [ ] Full phpUnit
+- [x] PHPUnit
+- [x] Examples
+- [ ] Magical methods (20% completed)
+- [ ] Full phpUnit (20% completed)
 - [ ] Laravel Support
 - [ ] Codeigniter Support
-- [ ] completed
+- [ ] completed 100%
 
 ## Manual: 
 
