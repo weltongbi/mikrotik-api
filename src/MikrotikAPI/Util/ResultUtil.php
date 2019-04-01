@@ -3,27 +3,30 @@
 namespace MikrotikAPI\Util;
 
 /**
- * Description of ResultUtil
+ * Description of ResultUtil.
  *
  * @author      Lalu Erfandi Maula Yusnu nunenuh@gmail.com <http://vthink.web.id>
  * @copyright   Copyright (c) 2011, Virtual Think Team.
  * @license     http://opensource.org/licenses/gpl-license.php GNU Public License
+ *
  * @category	Libraries
  */
-class ResultUtil {
-
+class ResultUtil
+{
     private $list;
     private $listAttr;
     private $itList;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->list = new \ArrayObject();
         $this->listAttr = new \ArrayObject();
     }
 
-    public function getResult($mixed = '') {
-        $value = NULL;
-        if (gettype($mixed) == "string") {
+    public function getResult($mixed = '')
+    {
+        $value = null;
+        if (gettype($mixed) == 'string') {
             $it = $this->listAttr->getIterator();
             while ($it->valid()) {
                 if ($it->current()->getName() == $mixed) {
@@ -31,16 +34,18 @@ class ResultUtil {
                 }
                 $it->next();
             }
-        } else if (gettype($mixed) == "integer") {
+        } elseif (gettype($mixed) == 'integer') {
             $it = $this->listAttr->getIterator();
             $value = $it->offsetGet($mixed)->getValue();
         } else {
-            $value = NULL;
+            $value = null;
         }
+
         return $value;
     }
 
-    public function getResultArray() {
+    public function getResultArray()
+    {
         $ar = new \ArrayObject();
 
         while ($this->next()) {
@@ -51,64 +56,76 @@ class ResultUtil {
             }
             $ar->append($tmpAr);
         }
+
         return $ar->getArrayCopy();
     }
 
-    public function getResultJson() {
+    public function getResultJson()
+    {
         return json_encode($this->getResultArray());
     }
 
-    public function getResultXml() {
-        $xml_data = new \SimpleXMLElement('<?xml version="1.0"?><data></data>');
+    public function getResultXml()
+    {
+        $xml_data = new \SimpleXMLElement("<?xml version='1.0'?><data></data>");
 
         $this->prepareXml($this->getResultArray(), $xml_data);
 
         return $xml_data->asXML();
     }
 
-    private function prepareXml($data, &$xml_data) {
+    private function prepareXml($data, &$xml_data)
+    {
         foreach ($data as $key => $value) {
+            if ($key === '.id') {
+                $key = '_id';
+            }
             if (is_numeric($key)) {
-                $key = 'item' . $key; //dealing with <0/>..<n/> issues
+                $key = 'item'.$key; //dealing with <0/>..<n/> issues
             }
             if (is_array($value)) {
-                $subnode = $xml_data->addChild($key);
-                $this->prepareXml($value, $subnode);
+                $subNode = $xml_data->addChild($key);
+                $this->prepareXml($value, $subNode);
             } else {
                 $xml_data->addChild("$key", htmlspecialchars("$value"));
             }
         }
     }
 
-    private function fireOnChange() {
+    private function fireOnChange()
+    {
         $this->itList = $this->list->getIterator();
         $this->listAttr = $this->itList->current();
     }
 
-    public function hasNext() {
+    public function hasNext()
+    {
         return $this->itList->valid();
     }
 
-    public function next() {
+    public function next()
+    {
         if (!$this->size()) {
-            return FALSE;
+            return false;
         }
         if ($this->hasNext()) {
             $this->listAttr = $this->itList->current();
             $this->itList->next();
-            return TRUE;
+
+            return true;
         } else {
-            return FALSE;
+            return false;
         }
     }
 
-    private function size() {
+    private function size()
+    {
         return $this->list->count();
     }
 
-    public function add(\ArrayObject $object) {
+    public function add(\ArrayObject $object)
+    {
         $this->list->append($object);
         $this->fireOnChange();
     }
-
 }

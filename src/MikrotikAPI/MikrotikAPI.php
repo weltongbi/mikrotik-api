@@ -34,6 +34,7 @@ class MikrotikAPI extends Talker
         'interfaces' => 'MikrotikAPI\Commands\Interfaces\Interfaces',
         'ppp' => 'MikrotikAPI\Commands\PPP\PPP',
         'system' => 'MikrotikAPI\Commands\System\System',
+        'user' => 'MikrotikAPI\Commands\User\User',
     ];
 
     public function __construct()
