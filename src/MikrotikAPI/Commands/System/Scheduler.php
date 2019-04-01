@@ -1,11 +1,11 @@
 <?php
 
-namespace MikrotikAPI\Commands\PPP;
+namespace MikrotikAPI\Commands\System;
 
 use MikrotikAPI\Talker\Talker;
 
 /**
- * Description of Secret.
+ * Description of Scheduler.
  *
  * @author Welton Castro weltongbi@gmail.com <welton.dev>
  * @copyright Copyright (c) 2018 - 2019
@@ -16,7 +16,7 @@ use MikrotikAPI\Talker\Talker;
  *
  * @category Commands
  */
-class Secret
+class Scheduler
 {
     use \MikrotikAPI\Entity\Methods;
 
@@ -28,7 +28,7 @@ class Secret
     public function __construct(Talker $talker)
     {
         $this->setAllowedMethods(['add', 'set', 'remove', 'enable', 'disable']);
-        $this->setMainCommand('/ppp/secret');
+        $this->setMainCommand('/system/scheduler');
 
         $this->talker = $talker;
     }

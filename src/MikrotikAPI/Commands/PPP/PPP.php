@@ -3,58 +3,49 @@
 namespace MikrotikAPI\Commands\PPP;
 
 use MikrotikAPI\Talker\Talker;
-use MikrotikAPI\Commands\PPP\Active,
-    MikrotikAPI\Commands\PPP\Secret,
-    MikrotikAPI\Commands\PPP\AAA,
-    MikrotikAPI\Commands\PPP\Profile;
 
 /**
- * Description of Mapi_Ppp
+ * Description of PPP.
  *
- * @author      Lalu Erfandi Maula Yusnu nunenuh@gmail.com <http://vthink.web.id>
- * @copyright   Copyright (c) 2011, Virtual Think Team.
- * @license     http://opensource.org/licenses/gpl-license.php GNU Public License
- * @category	Libraries
+ * @author Welton Castro weltongbi@gmail.com <welton.dev>
+ * @copyright Copyright (c) 2018 - 2019
+ *
+ * @see welton.dev
+ *
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ *
+ * @category	 Commands
+ *
+ * @property AAA     $aaa     Description
+ * @property Active  $active  Description
+ * @property Profile $profile Description
+ * @property Secret  $secret  Description
  */
-class PPP {
-
+class PPP
+{
+    /**
+     * @var type array
+     */
     private $talker;
+    private $class = [
+        'aaa' => 'MikrotikAPI\Commands\PPP\AAA',
+        'active' => 'MikrotikAPI\Commands\PPP\Active',
+        'profile' => 'MikrotikAPI\Commands\PPP\Profile',
+        'secret' => 'MikrotikAPI\Commands\PPP\Secret',
+    ];
 
-    function __construct(Talker $talker) {
+    public function __construct(Talker $talker)
+    {
         $this->talker = $talker;
     }
 
-    /**
-     * This method for call class Profile
-     * @return Object of Profile class
-     */
-    public function profile() {
-        return new Profile($this->talker);
-    }
+    public function __get($name)
+    {
+        if ($this->class[$name]) {
+            $class = $this->class[$name];
 
-    /**
-     * This method for call class Secret
-     * @return Object of Secret
-     */
-    public function secret() {
-        return new Secret($this->talker);
+            return new $class($this->talker);
+        }
+        throw new \Exception('The method not exist');
     }
-
-    /**
-     * This method for call class Aaa
-     * @access public
-     * @return object of Aaa class
-     */
-    public function AAA() {
-        return new AAA($this->talker);
-    }
-
-    /**
-     * This method for call class Active
-     * @return Object of Active class
-     */
-    public function active() {
-        return new Active($this->talker);
-    }
-
 }
