@@ -1,6 +1,6 @@
 <?php
 
-namespace MikrotikAPI\Commands\User;
+namespace MikrotikAPI\Commands;
 
 use MikrotikAPI\Talker\Talker;
 

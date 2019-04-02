@@ -29,12 +29,12 @@ class MikrotikAPI extends Talker
     const MK_DEFAULT_RESULT = 'array';
 
     private $class = [
-        'file' => 'MikrotikAPI\Commands\File\File',
+        'file' => 'MikrotikAPI\Commands\File',
         'ip' => 'MikrotikAPI\Commands\IP\IP',
         'interfaces' => 'MikrotikAPI\Commands\Interfaces\Interfaces',
         'ppp' => 'MikrotikAPI\Commands\PPP\PPP',
         'system' => 'MikrotikAPI\Commands\System\System',
-        'user' => 'MikrotikAPI\Commands\User\User',
+        'user' => 'MikrotikAPI\Commands\User',
     ];
 
     public function __construct()
